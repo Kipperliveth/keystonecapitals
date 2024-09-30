@@ -16,6 +16,8 @@ import { RiExchangeDollarLine } from "react-icons/ri";
 import { BiTransfer } from "react-icons/bi";
 import { RiSendPlaneLine } from "react-icons/ri";
 import { MdFormatListBulletedAdd } from "react-icons/md";
+import { IoWalletOutline } from "react-icons/io5";
+
 
 function Dashboard() {
 
@@ -211,8 +213,41 @@ function Dashboard() {
 
       </div>
 
-      <div className="actions">
+      <div className="act">
+
+        <div className="actions-container">
+          <h5>Quick Actions</h5>
+
+          <div className="activities">
+
+            <NavLink className="activity desktop">
+                <MdFormatListBulletedAdd  className='icon' />
+              New Investment
+            </NavLink>  
+             <NavLink className="activity">
+                <IoWalletOutline  className='icon' />
+              Deposit
+            </NavLink>
+            <NavLink className="activity">
+                <RiExchangeDollarLine  className='icon' />
+              Convert
+            </NavLink>
+            <NavLink className="activity">
+              <RiSendPlaneLine className='icon' />
+             Withdraw
+            </NavLink>
+
+          </div>
+
+            <NavLink className="activity mobile">
+                <MdFormatListBulletedAdd  className='icon' />
+              New Investment
+            </NavLink>  
+
+
+        </div>
         
+
       </div>
 
 

@@ -13,6 +13,8 @@ import { MdOutlineLogout } from "react-icons/md";
 import { RiExchangeDollarLine } from "react-icons/ri";
 import { RiSendPlaneLine } from "react-icons/ri";
 import { MdFormatListBulletedAdd } from "react-icons/md";
+import { IoWalletOutline } from "react-icons/io5";
+
 
 function UserNav({ onClose }) {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -78,7 +80,7 @@ function UserNav({ onClose }) {
                     </NavLink>
 
                     <NavLink className="logout">
-                        <BiTransfer  className='icon' /> Fund Wallet
+                        <IoWalletOutline  className='icon' /> Fund Wallet
                     </NavLink>
 
                     </div>
@@ -113,14 +115,14 @@ function UserNav({ onClose }) {
                     to='/deposits' 
                     className={({ isActive }) => isActive ? 'active-link' : ''}
                 >
-                    <AiOutlineBank className='linkicon'/> <h3>Deposits</h3>
+                    <IoWalletOutline className='linkicon'/> <h3>Deposits</h3>
                 </NavLink>
 
                 <NavLink 
                     to='/withdrawals' 
                     className={({ isActive }) => isActive ? 'active-link' : ''}
                 >
-                    <BiWalletAlt className='linkicon'/> <h3>Withdrawals</h3>
+                    <RiSendPlaneLine className='linkicon'/> <h3>Withdrawals</h3>
                 </NavLink>
             </div>
             </div>

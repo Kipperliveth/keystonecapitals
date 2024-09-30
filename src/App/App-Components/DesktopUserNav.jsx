@@ -5,10 +5,13 @@ import { MdOutlineDashboard } from "react-icons/md";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { BiTransfer } from "react-icons/bi";
 import { MdTrendingUp } from 'react-icons/md';
-import { AiOutlineBank } from 'react-icons/ai';
 import { BiWalletAlt } from 'react-icons/bi';
 import { MdOutlineSettings } from "react-icons/md";
 import { MdOutlineLogout } from "react-icons/md";
+import { IoWalletOutline } from "react-icons/io5";
+import { RiSendPlaneLine } from "react-icons/ri";
+
+
 
 
 function DesktopUserNav() {
@@ -70,14 +73,14 @@ function DesktopUserNav() {
                     to='/deposits' 
                     className={({ isActive }) => isActive ? 'active-link' : ''}
                 >
-                    <AiOutlineBank className='linkicon'/> <h3>Deposits</h3>
+                    <IoWalletOutline className='linkicon'/> <h3>Deposits</h3>
                 </NavLink>
 
                 <NavLink 
                     to='/withdrawals' 
                     className={({ isActive }) => isActive ? 'active-link' : ''}
                 >
-                    <BiWalletAlt className='linkicon'/> <h3>Withdrawals</h3>
+                    <RiSendPlaneLine className='linkicon'/> <h3>Withdrawals</h3>
                 </NavLink>
                 </div>
 
