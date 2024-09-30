@@ -1,0 +1,260 @@
+.navigation{
+    width: 100%;
+    position: fixed;
+    background: white;
+    z-index: 1000;
+
+    .navbar{
+        width: 95%;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        align-items: center;
+
+        .active-link{
+
+            &::after{
+                position: absolute;
+                bottom: -30%;
+                left: 35%;
+                margin: 0 auto;
+                content: "";
+                width: 20px;
+                height: 2px;
+                border-radius: 25px;
+                transform: scaleX(1);
+                background:hsl(0, 0%, 73%);
+                transform-origin: center;
+                opacity: 1;
+                transition: 0.3s ease-in-out, visibility ease-in;
+            }
+    
+        }
+
+        .logo-container{
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: black;
+
+            img{
+                width: 70px;
+                height: 70px;
+            }
+
+            .name{
+                display: flex;
+                align-items: center;
+                gap: 5px;
+
+                p{
+                    letter-spacing: 1px;
+                }
+            }
+        }
+
+        .links{
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            justify-content: center;
+            li{
+                position: relative;
+    
+                &::after{
+                    position: absolute;
+                    bottom: -30%;
+                    left: 35%;
+                    margin: 0 auto;
+                    content: "";
+                    width: 20px;
+                    height: 2px;
+                    border-radius: 25px;
+                    transform: scaleX(0);
+                    background: black;
+                    transform-origin: center;
+                    opacity: 0;
+                    transition: 0.3s ease-in-out, visibility ease-in;
+                }
+    
+                &:hover::after{
+                    transform: scaleX(1);
+                    transform-origin: center;
+                    opacity: 1;
+                }
+            }
+            
+            a{
+                color: black;
+                font-weight: 500;
+                text-decoration: none;
+                padding: 2px;
+
+            }
+        }
+
+        .start{
+            display: flex;
+            justify-content: flex-end;
+            gap: 1.2rem;
+            align-items: center;
+
+            a{
+                text-decoration: none;
+                padding: 12.5px 15px;
+                font-weight: 600;
+                background: hsl(0, 0%, 93%);
+                border-radius: 5px;
+                color: black;
+                transition: .1s ease;
+                border: 1px solid transparent;
+
+                &:nth-child(1){
+                    
+                    background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(100,43,115,1) 0%, rgba(4,0,4,1) 90% );
+                    
+                    color: white;
+
+                }
+
+                &:hover{
+                    border: 1px solid #3232;
+                    transform: scale(.95);
+                }
+            }
+
+            .mobile{
+                display: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                font-weight: 500;
+                width: 50px;
+                transition: .1s ease;
+                &:hover{
+                    transform: scale(.85);
+                }
+            }
+        }
+
+        .mobile-menu{
+            position: fixed;
+            background: white;
+            top: 5rem;
+            width: 100%;
+            display: none;
+        }
+    }
+}
+
+@media screen and (max-width: 1050px) {
+.navigation{
+    .navbar{
+        font-size: 80%;
+    }
+}
+}
+
+@media screen and (max-width: 992px) {
+    .navigation{
+        .navbar{
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            // overflow-x: hidden;
+            // padding-bottom: 30px;
+            height: 5rem;
+
+            .logo-container{
+                padding-left: 2.5%;
+                .name{
+                   font-size: .8em;
+                }
+            }
+            .start{
+                padding-right: 2.5%;
+            }
+            
+            .links{
+                display: none;
+            }
+
+            .desktop{
+                display: none;
+            }
+
+            .start{
+                gap: .5rem;
+                .mobile{
+                    display: flex;
+                    justify-content: center;
+                }
+
+            }
+
+            .mobile-menu{
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1.6rem;
+                padding-top: 3rem;
+                background: white;
+                // box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+                height: 100vh;
+                overflow-y: auto;
+                // padding-bottom: 3rem;
+
+                a{
+                    text-decoration: none;
+                    color: #252525;
+                    font-size: 125%;
+                    display: flex;
+                    align-items: center;
+                    font-weight: 500;
+
+                    .arrow{
+                        font-size: 1.25rem;
+                        color: hsla(300, 20%, 17%, 0.133);
+                    }
+
+                    &:hover{
+                        color: #888;
+                    }
+                }
+
+                span{
+                    background: hsl(0, 0%, 81%);
+                    width: 100%;
+                    height: 1px;
+                    display: flex;
+                    justify-content: center;
+                    margin-block: 1.6rem;
+                }
+
+                .start-mobile{
+                    display: flex;
+                    gap: 1rem;
+                    align-items: center;
+                    justify-content: center;
+                    width: 90%;
+                    margin: 0 auto;
+
+                    a{
+                        border: 1px solid black;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        width: 100%;
+                        display: flex;
+                        font-weight: 500;
+                        justify-content: center;
+
+                        &:nth-child(1){
+                            background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(100,43,115,1) 0%, rgba(4,0,4,1) 90% );
+                            color: white;
+                        }
+                    }
+                }
+                
+            }
+        }
+    }
+}

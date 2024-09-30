@@ -1,0 +1,170 @@
+.DesktopUserNav{
+    border: 1px solid #eee;
+   
+    height: 100vh; /* Full height of the viewport */
+    width: 255px; /* Sidebar width */
+    position: fixed; /* Keeps the sidebar fixed on the side */
+    top: 0;
+    left: 0;
+
+    .DesktopUserNav-container{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+
+        .logo-container{
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: black;
+            font-size: .8em;
+            margin-top: .6rem;
+    
+            img{
+                width: 70px;
+                height: 70px;
+            }
+    
+            .name{
+                display: flex;
+                align-items: center;
+                gap: 5px;
+    
+                p{
+                    letter-spacing: 1px;
+                }
+            }
+        }
+
+        .links{
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+            
+            a{
+                display: flex;
+                align-items: center;
+                padding-inline: 1rem;
+                margin-left: 1.6rem;
+                gap: .8rem;
+                text-decoration: none;
+                color: #252525;
+                cursor: pointer;
+
+                h3{
+                    font-weight: 400;
+                    font-size: 1em;
+                }
+
+                .linkicon{
+                    font-size: 1.6rem;
+                }
+
+                &.active-link {
+                    .linkicon {
+                        color: rgba(100,43,115,1)  ;
+                    }
+                  }
+            }
+        }
+
+        .user{
+            display: flex;
+            padding: 1rem;
+            padding-top: 1.6rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            position: relative;
+
+            .icon{
+                padding: 5px;
+                background: #eee;
+                border-radius: 50%;
+                height: 30px;
+                width: 30px;
+                display: flex;
+                justify-content: center;
+
+                p{
+                    font-weight: 500;
+                    font-size: 14px;
+                }
+            }
+
+          .username{
+            font-weight: 500;
+          }
+            
+          .options{
+                                padding: 5px;
+                                font-size: 2rem;
+                                border-radius: 50%;
+                                transition: .2s ease;
+                                
+                                &:hover{
+
+                                    background: #eee;
+                                }
+             }
+
+             .settings-logout{
+                position: absolute;
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+                color: #252525;
+                cursor: pointer;
+                background: white;
+                border-radius: 20px;
+                flex-direction: column;
+                right: -20px;
+                top: -50px;
+                width: 150px;
+                text-align: start;
+                box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+                
+                .logout, .settings{
+                    text-decoration: none;
+                    width: 100%;
+                    color: hsl(0, 0%, 25%);
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    gap: 10px;
+                    font-size: 14px;
+                    padding-inline: 1.5rem;
+                    padding-block: 1rem;
+                    font-weight: 500;
+                    
+                    &:hover{
+                          background: #F0F1FA;
+                      }
+             }
+
+             .logout{
+                border-bottom-left-radius: 20px;
+                border-bottom-right-radius: 20px;
+             }
+             
+             .settings{
+                border-top-left-radius: 20px;
+                border-top-right-radius: 20px;
+             }
+            }
+        }
+
+    }
+
+
+}
+
+@media screen and (max-width: 765px) {
+    .DesktopUserNav{
+   display: none;
+    }
+
+}

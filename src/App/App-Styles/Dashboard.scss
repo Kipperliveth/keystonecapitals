@@ -1,0 +1,119 @@
+.layout{
+
+    .dashboard-container{
+    
+        &::-webkit-scrollbar {
+            display: none; /* Hides the scrollbar */
+        }
+
+        .accounts{
+            margin-top: 5rem;
+            padding: 2.8rem;
+            position: relative;
+
+            .accounts-container{
+            position: relative;
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+                padding: 5px;
+                white-space: nowrap;
+                overflow-x: auto;
+                scroll-behavior: smooth; 
+                -ms-overflow-style: none;
+                scrollbar-width: none; 
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+
+                .account{
+                    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+                    padding: 1rem;
+                    border-radius: 20px;
+                    cursor: pointer;
+
+                    height: 150px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    min-width: 250px !important;
+
+                    &:hover{
+                        background: #F0F1FA;
+                    }
+
+                    .name-logo{
+                        display: flex;
+                        align-items: center;
+                        gap: 1.6rem;
+                        
+                        p{
+                            letter-spacing: 1px;
+                            font-size: 16px;
+                            font-weight: 500;
+
+                            .br{
+                                display: none;
+                            }
+                        }
+                        img{
+                            width: 50px;
+                            height: 50px;
+                        }
+                    }
+
+                    .available{
+                        display: flex;
+                        flex-direction: column;
+                        gap: .5rem;
+
+                        .total{
+                            font-weight: 500;
+                        }
+                        p{
+                            color: #888;
+                            font-size: 14px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 765px) {
+.layout{
+
+    .dashboard-container{
+       .accounts{
+            margin-top: 3rem;
+            margin-top: 5rem;
+            padding-inline: 1rem;
+
+            .accounts-container{
+
+                .account{
+                    font-size: .9em;
+                    min-width: 175px !important;
+
+                    .name-logo{
+                        gap: 1rem;
+                        img{
+                            width: 35px;
+                            height: 35px;
+                        }
+                        p{
+                            display: contents;
+                            flex-wrap: wrap;
+
+                            .br{
+                                display: block;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+}
