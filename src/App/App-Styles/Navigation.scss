@@ -6,6 +6,7 @@
     position: fixed; /* Keeps the sidebar fixed on the side */
     top: 0;
     left: 0;
+    z-index: 10000;
 
     .DesktopUserNav-container{
         display: flex;
@@ -112,6 +113,7 @@
              }
 
              .settings-logout{
+                z-index: 1;
                 position: absolute;
                 display: flex;
                 align-items: center;

@@ -250,6 +250,66 @@ function Dashboard() {
 
       </div>
 
+      <div className="newInvest-methods">
+
+            <div className="newInvest-methods-container">
+
+              <div className="active">
+                <h5>Active Investments</h5>
+                <div className="active-investments">
+                  <p className='nothing'>
+                  Your Active Investments will show here
+                  </p>
+                </div>
+              </div>
+
+              <div className="methods">
+              <h5>Receive Deposits</h5>
+              <div className="methods-content">
+              
+                <div className="methods-icons">
+                  {/* <img src={bitcoin} alt="bitcoin" />
+                  <img src={Eth} alt="ethereum" />
+                  <img src={USDT} alt="tether" />
+                  <img src={sol} alt="solana" /> */}
+              </div>
+
+              </div>
+
+              </div>
+
+            </div>
+
+      </div>
+
+      <div className="investment-rates">
+        <div className="investment-rates-container">
+          <h5>Investment Rates</h5>
+          {/* <div className="rates">
+            <div className="rate">
+              <img src={bitcoin} alt="bitcoin" />
+              <p>$1.00</p>
+            </div>
+            <div className="rate">
+              <img src={Eth} alt="ethereum" />
+              <p>$1.00</p>
+            </div>
+            <div className="rate">
+              <img src={USDT} alt="tether" />
+              <p>$1.00</p>
+            </div>
+            <div className="rate">
+              <img src={sol} alt="solana" />
+              <p>$1.00</p>
+            </div>
+          </div> */}
+        </div>
+      </div>
+
+      <div className="transaction-history">
+        <h5>Transaction History</h5>
+      </div>
+
 
       </div>
 
