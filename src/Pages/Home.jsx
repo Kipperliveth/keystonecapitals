@@ -39,6 +39,8 @@ function Home() {
     const { hash } = useLocation();
 
     useEffect(() => {
+      // document.tilte= "godson";
+      
       if (hash) {
         setTimeout(() => {
           const element = document.getElementById(hash.replace('#', ''));

@@ -191,6 +191,49 @@
                         }
                     }
 
+                    .methods-content{
+
+                        .methods-icons{
+                            display: flex;
+                            flex-direction: column;
+                            gap: 1rem;
+                            
+                            .wallet{
+                                cursor: pointer;
+                                display: flex;
+                                align-items: center;
+                                gap: 1.5rem;
+                                font-size: .9em;
+
+                                img{
+                                    width: 35px;
+                                    height: 35px;
+                                }
+
+                                p{
+                                    font-size: .9em;
+                                }
+                            }
+                        }
+                    }
+
+                    .all-wallets{
+                        font-size: .8em;
+                        width: 100%;
+                        text-align: end;
+                        display: flex;
+                        align-items: center;
+                        cursor: pointer;
+                        gap: 5px;
+                        color: #642B73;
+                        font-weight: 500;
+                        justify-content: flex-end;
+
+                        .icon{
+                            font-size: 16px;
+                        }
+                    }
+
 
                 }
 
@@ -199,11 +242,101 @@
             }
         }
 
-        .investment-rates{
+        .investment-rates, .transaction-history{
             padding-inline: 3rem;
             position: relative;
             user-select: none;
             margin-top: 1.6rem;
+        }
+
+        .investment-rates{
+
+            .investment-rates-container{
+                border-radius: 20px;
+                box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+                position: relative;
+                background: white;
+                padding: 1.6rem;
+                padding-block: 2.5rem;
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+
+                h5{
+                    margin-bottom: 1.6rem;
+                }
+                
+                .rate{
+                    font-size: .9em;
+                    display: grid;
+                    align-items: center;
+                    padding-block: 1.2rem;
+                    grid-template-columns: 33.3% 33.3% 33.3%;
+                    border-bottom: 1.5px solid hsl(0, 0%, 95%);
+                    cursor: pointer;
+                }
+                .rate.last{
+                    border-bottom: none;
+                }
+
+                .head{
+                    font-weight: 600;
+
+                    .capital{
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        width: 80%;
+                    }
+                }
+
+                .roi-rate{
+                    .asset{
+                        display: flex;
+                        align-items: center;
+                        gap: .7rem;
+
+                        img{
+                            width: 25px;
+                            height: 25px;
+                        }
+                    }
+
+                    .ROI{
+                        font-size: .9em;
+                        line-height: 1.5;
+                    }
+
+
+                }
+            }
+        }
+
+        .transaction-history{
+
+            .transaction-history-container{
+                border-radius: 20px;
+                box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+                position: relative;
+                background: white;
+                padding: 1.6rem;
+                padding-block: 2.5rem;
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                margin-bottom: 5rem;
+                height: 300px;
+
+                .nothing-yet{
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 100%;
+                    text-align: center;
+                    font-size: .8em;
+                }
+            }
         }
 
     }
@@ -313,6 +446,28 @@
                 flex-direction: column;
             }
 
+            }
+
+            .investment-rates{
+                padding-inline: 1.2rem;
+
+                .investment-rates-container{
+                    h5{
+                        font-size: 13.5px;
+                    }
+                    
+                    font-size: 0.8em;
+
+                   .roi-rate{
+                    .capital{
+                        padding-left: 1.5rem;
+                      }
+                   }
+                }
+            }
+
+            .transaction-history{
+                padding-inline: 1.2rem;
             }
     }
 }

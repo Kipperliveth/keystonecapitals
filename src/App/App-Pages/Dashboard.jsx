@@ -17,6 +17,7 @@ import { BiTransfer } from "react-icons/bi";
 import { RiSendPlaneLine } from "react-icons/ri";
 import { MdFormatListBulletedAdd } from "react-icons/md";
 import { IoWalletOutline } from "react-icons/io5";
+import { MdKeyboardArrowRight } from "react-icons/md";
 
 
 function Dashboard() {
@@ -265,16 +266,63 @@ function Dashboard() {
 
               <div className="methods">
               <h5>Receive Deposits</h5>
+
               <div className="methods-content">
               
                 <div className="methods-icons">
-                  {/* <img src={bitcoin} alt="bitcoin" />
+
+                  <div className="wallet">
+                    <img src={bitcoin} alt="bitcoin" />
+
+                    <div className="deposit-method">
+                    <h4>Bitcoin</h4>
+                    <p>Bitcoin (BTC)</p>
+                    </div>
+
+                  </div>
+
+                  <div className="wallet">
                   <img src={Eth} alt="ethereum" />
+
+                    <div className="deposit-method">
+                    <h4>Ethereum</h4>
+                    <p>Ethereum (ERC20)</p>
+                    </div>
+
+                  </div>
+
+                  <div className="wallet">
                   <img src={USDT} alt="tether" />
-                  <img src={sol} alt="solana" /> */}
+
+
+                    <div className="deposit-method">
+                    <h4>USDT</h4>
+                    <p>Tether(ERC20)</p>
+                    </div>
+
+                  </div>
+
+                  <div className="wallet">
+                  <img src={sol} alt="solana" />
+
+
+                    <div className="deposit-method">
+                    <h4>Solana</h4>
+                    <p>Solana Network (SOL)</p>
+                    </div>
+
+                  </div>
+
+                  
+
+
               </div>
 
               </div>
+
+             <div className='all-wallets'>View All Address <MdKeyboardArrowRight className='icon' /></div>
+
+          
 
               </div>
 
@@ -285,29 +333,65 @@ function Dashboard() {
       <div className="investment-rates">
         <div className="investment-rates-container">
           <h5>Investment Rates</h5>
-          {/* <div className="rates">
-            <div className="rate">
-              <img src={bitcoin} alt="bitcoin" />
-              <p>$1.00</p>
-            </div>
-            <div className="rate">
-              <img src={Eth} alt="ethereum" />
-              <p>$1.00</p>
-            </div>
-            <div className="rate">
-              <img src={USDT} alt="tether" />
-              <p>$1.00</p>
-            </div>
-            <div className="rate">
-              <img src={sol} alt="solana" />
-              <p>$1.00</p>
-            </div>
-          </div> */}
+
+          <div className="rates">
+
+           <div className="head rate">
+
+                <div className="asset">Asset</div>
+                <div className="capital">Minimum Capital</div>
+                <div className="ROI">ROI</div>
+
+           </div>
+
+           <div className="roi-rate rate">
+
+          <div className="asset"><img src={bitcoin} alt='bitcoin' /> BTC</div>
+          <div className="capital">$50</div>
+          <div className="ROI">+40%(2wks) / + 200%(2mnths)</div>
+
+          </div>
+
+          <div className="roi-rate rate">
+
+          <div className="asset"><img src={Eth} alt='eth'/>ETH</div>
+          <div className="capital">$50</div>
+          <div className="ROI">+40%(2wks) / + 200%(2mnths)</div>
+
+          </div>
+
+          <div className="roi-rate rate">
+
+          <div className="asset"><img src={USDT} alt='USDT'/> USDT</div>
+          <div className="capital">$50</div>
+          <div className="ROI">+40%(2wks) / + 200%(2mnths)</div>
+
+          </div>
+
+          <div className="roi-rate rate last">
+
+          <div className="asset"><img src={sol} alt='solana' />SOL</div>
+          <div className="capital">$50</div>
+          <div className="ROI">+40%(2wks) / + 200%(2mnths)</div>
+
+          </div>
+
+          </div>
+
         </div>
       </div>
 
       <div className="transaction-history">
+
+        <div className="transaction-history-container">
         <h5>Transaction History</h5>
+
+        <div className="nothing-yet">
+          No transactions yet
+        </div>
+
+        </div>
+        
       </div>
 
 
