@@ -171,7 +171,7 @@ function Dashboard() {
 
             <div className="available">
               <div className="total">
-                  $0.014
+                  $ 3,200.43
               </div>
               <p>Available balance</p>
             </div>
@@ -187,7 +187,7 @@ function Dashboard() {
 
             <div className="available">
               <div className="total">
-                  $0.014
+                  $ 564.76
               </div>
               <p>Available balance</p>
             </div>

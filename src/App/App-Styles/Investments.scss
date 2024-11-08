@@ -1,0 +1,177 @@
+.layout .content .pages-content{
+    padding: 8rem;
+    padding-inline: 3rem;
+    background: hsl(220, 23%, 99%);
+
+
+    .deposits{
+        
+        .add-convert{
+            
+            .add-convert-container{
+                display: flex;
+                gap: 1.5rem;
+                flex-wrap: wrap;
+                
+                .action{
+                border: 1.5px solid rgba(100,43,115,0.5);
+                padding: .6rem 1rem;
+                border-radius: 40px;
+                font-size: 14px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: .5rem;
+                color: rgba(100,43,115,1);
+
+            }
+        }
+
+        .add-funds{
+            margin-block: 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            
+            .tab{
+                    border-radius: 20px;
+                    height: 300px;
+                    background: white;
+                    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+                    padding: 1rem;
+                }
+
+                .wallet{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+
+                    .switch-balance{
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2rem;
+
+                        .balance{
+                            display: flex;
+                            gap: 1rem;
+                            flex-direction: column;
+                            padding-inline: 1rem;
+
+
+                            .account-balance{
+                                font-size: 20px;
+                                font-weight: 500;
+                                letter-spacing: 1px;
+                            }
+
+                            p{
+                                display: flex;
+                                align-items: center;
+                                gap: .8rem;
+                                color: #888;
+                                cursor: pointer;
+                            }
+                        }
+                    }
+
+                    .switch-container{
+                        display: flex;
+                        align-items: center;
+                        font-size: 14px;
+                        justify-content: space-between;
+                        cursor: pointer;
+                        padding: 1rem;
+                        border-radius: 10px;
+                        position: relative;
+
+                        &:hover{
+                            background:rgba(100,43,115, 0.1);
+                        }
+
+                        .asset{
+                            display: flex;
+                            align-items: center;
+                            gap: .5rem ;
+                            img{
+                                width: 15px;
+                                height: 15px;
+                            }
+                        }
+
+
+                        .switch-button{
+                            display: flex;
+                            justify-content: end;
+                            align-items: center;
+                            gap: 5px;
+                            font-size: 12px;
+
+                            span{
+                                display: flex;
+                                flex-direction: column;
+                            }
+                        }
+
+                        .asset-selector{
+                        position: absolute;
+                        top: 110%;
+                        z-index: 1;
+                        background: white;
+                        box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+                         width: 100%;
+                         left: 0;
+                         border-radius: 10px;
+
+                         .coin{
+                            display: flex;
+                            align-items: center;
+                            gap: 1rem;
+                            padding: 1rem;
+                            cursor: pointer;
+                            transition: background-color .2s ease;
+
+                            img{
+                                width: 20px;
+                                height: 20px;
+                            }
+
+                            &:hover{
+                                background-color: rgba(100,43,115, 0.1);
+                            }
+
+                            &:nth-child(1){
+                                border-top-right-radius: 10px;
+                                border-top-left-radius: 10px;
+                            }
+                            &:nth-child(4){
+                                border-bottom-left-radius: 10px;
+                                border-bottom-right-radius: 10px;
+                            }
+                         }
+                        }
+
+                    }
+
+                    a{
+                        display: flex;
+                        text-decoration: none;
+                        align-items: center;
+                        justify-content: end;
+                        font-weight: 400;
+                        font-size: 14px;
+                        padding: .5rem;
+                    }
+                }
+            
+        }
+    }
+    }
+}
+
+@media screen and (max-width: 765px) {
+
+.layout .content .pages-content{
+    padding-inline: 1rem;
+    border: none;
+    border-bottom: 1px solid red;
+ }}

@@ -114,6 +114,11 @@ function Transactions() {
 
     </div>
 
+    <div className="pages-content">
+
+Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis dolore a, neque beatae libero facilis debitis nostrum. Doloremque rem nobis quidem placeat ab hic dolorem asperiores. Totam vero ab nam!Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis dolore a, neque beatae libero facilis debitis nostrum. Doloremque rem nobis quidem placeat ab hic dolorem asperiores. Totam vero ab nam!Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis dolore a, neque beatae libero facilis debitis nostrum. Doloremque rem nobis quidem placeat ab hic dolorem asperiores. Totam vero ab nam!Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis dolore a, neque beatae libero facilis debitis nostrum. Doloremque rem nobis quidem placeat ab hic dolorem asperiores. Totam vero ab nam!Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis dolore a, neque beatae libero facilis debitis nostrum. Doloremque rem nobis quidem placeat ab hic dolorem asperiores. Totam vero ab nam!Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis dolore a, neque beatae libero facilis debitis nostrum. Doloremque rem nobis quidem placeat ab hic dolorem asperiores. Totam vero ab nam!Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis dolore a, neque beatae libero facilis debitis nostrum. Doloremque rem nobis quidem placeat ab hic dolorem asperiores. Totam vero ab nam!
+</div>
+
     </div>
 
   </div>
