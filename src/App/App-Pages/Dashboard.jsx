@@ -18,9 +18,18 @@ import { RiSendPlaneLine } from "react-icons/ri";
 import { MdFormatListBulletedAdd } from "react-icons/md";
 import { IoWalletOutline } from "react-icons/io5";
 import { MdKeyboardArrowRight } from "react-icons/md";
-
+import { BsCurrencyDollar } from "react-icons/bs";
+import { auth, txtdb } from '../../firebase-config';
+import { doc, getDoc } from "firebase/firestore";
+import {
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
 
 function Dashboard() {
+
+  const [user, setUser] = useState({});
+
 
     // State to track if the sidebar is visible
     const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -54,6 +63,235 @@ function Dashboard() {
     };
   }, []);
 
+
+  //balances\
+  
+//eth balance
+  const [ethereumBalance, setEthereumBalance] = useState(null);
+
+    const currentUser = auth.currentUser;
+    const fetchEthereumBalance = async () => {
+
+      if(currentUser){
+        const userId = currentUser.uid;
+        const ethBalanceRef = doc(txtdb, "users", userId, "balances", "Ethereum");
+  
+        try {
+          const docSnap = await getDoc(ethBalanceRef);
+  
+          if (docSnap.exists()) {
+            setEthereumBalance(docSnap.data().balance || 0);
+          } else {
+            setEthereumBalance(0); // Asset balance does not exist
+          }
+        } catch (error) {
+          console.error("Error fetching Ethereum balance:", error);
+        } 
+      };
+
+      }
+
+ //btc balance
+ 
+ const [bitcoinBalance, setBitcoinBalance] = useState(null);
+
+    const fetchBitcoinBalance = async () => {
+
+      if(currentUser){
+        const userId = currentUser.uid;
+        const ethBalanceRef = doc(txtdb, "users", userId, "balances", "Bitcoin");
+  
+        try {
+          const docSnap = await getDoc(ethBalanceRef);
+  
+          if (docSnap.exists()) {
+            setBitcoinBalance(docSnap.data().balance || 0);
+          } else {
+            setBitcoinBalance(0); // Asset balance does not exist
+          }
+        } catch (error) {
+          console.error("Error fetching Bitcoin balance:", error);
+        } 
+      };
+
+      }
+   
+  //usdt balance
+  
+  const [usdtBalance, setUsdtBalance] = useState(null);
+
+  const fetchUsdtBalance = async () => {
+
+    if(currentUser){
+      const userId = currentUser.uid;
+      const ethBalanceRef = doc(txtdb, "users", userId, "balances", "USDT");
+
+      try {
+        const docSnap = await getDoc(ethBalanceRef);
+
+        if (docSnap.exists()) {
+          setUsdtBalance(docSnap.data().balance || 0);
+        } else {
+          setUsdtBalance(0); // Asset balance does not exist
+        }
+      } catch (error) {
+        console.error("Error fetching USDT balance:", error);
+      } 
+    };
+
+    }
+
+
+  //sol balance
+  
+  const [solBalance, setSolBalance] = useState(null);
+
+  const fetchSolBalance = async () => {
+
+    if(currentUser){
+      const userId = currentUser.uid;
+      const ethBalanceRef = doc(txtdb, "users", userId, "balances", "Solana");
+
+      try {
+        const docSnap = await getDoc(ethBalanceRef);
+
+        if (docSnap.exists()) {
+          setSolBalance(docSnap.data().balance || 0);
+        } else {
+          setSolBalance(0); // Asset balance does not exist
+        }
+      } catch (error) {
+        console.error("Error fetching Solana balance:", error);
+      } 
+    };
+
+    }
+
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser || null); // Ensures `user` is set to null if `currentUser` is null
+    });
+  
+    // Cleanup function to unsubscribe from the listener when component unmounts
+    return () => unsubscribe();
+  }, [auth]);
+
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        console.log("User is logged in:", currentUser);
+        setUser(currentUser);
+         
+      } else {
+        console.log("No user is logged in.");
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup subscription on component unmount
+  }, []);
+
+  useEffect(() =>{
+    document.title= "Dashboard"
+    fetchEthereumBalance();
+    fetchBitcoinBalance();
+    fetchUsdtBalance();
+    fetchSolBalance();
+  })
+
+
+  //fetching value
+
+  //btc
+  const [exchangeRate, setExchangeRate] = useState(null); // To store BTC-USD rate
+  const [btcValue, setBtcValue] = useState(null); // To store calculated BTC value
+
+  useEffect(() => {
+    // Fetch BTC to USD exchange rate
+    const fetchExchangeRate = async () => {
+      try {
+        const response = await fetch(
+          "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
+        );
+        const data = await response.json();
+        setExchangeRate(data.bitcoin.usd); // Set the BTC-USD rate
+      } catch (error) {
+        console.error("Error fetching exchange rate:", error);
+      }
+    };
+
+    fetchExchangeRate();
+  }, []);
+
+  // Calculate the BTC value when bitcoinBalance or exchangeRate changes
+  useEffect(() => {
+    if (exchangeRate !== null && bitcoinBalance !== null) {
+      setBtcValue((bitcoinBalance / exchangeRate).toFixed(8)); // Calculate BTC value and format to 8 decimals
+    }
+  }, [exchangeRate, bitcoinBalance]);
+
+
+  //eth
+  const [ethExchangeRate, setEthExchangeRate] = useState(null); // To store ETH-USD rate
+  const [ethValue, setEthValue] = useState(null); // To store calculated ETH value
+
+  useEffect(() => {
+    // Fetch ETH to USD exchange rate
+    const fetchExchangeRate = async () => {
+      try {
+        const response = await fetch(
+          "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+        );
+        const data = await response.json();
+        setEthExchangeRate(data.ethereum.usd); // Set the ETH-USD rate
+      } catch (error) {
+        console.error("Error fetching exchange rate:", error);
+      }
+    };
+
+    fetchExchangeRate();
+  }, []);
+
+  // Calculate the ETH value when ethereumBalance or exchangeRate changes
+  useEffect(() => {
+    if (ethExchangeRate !== null && ethereumBalance !== null) {
+      setEthValue((ethereumBalance / ethExchangeRate).toFixed(8)); // Calculate ETH value and format to 8 decimals
+    }
+  }, [ethExchangeRate, ethereumBalance]);
+
+  //solana
+  const [solExchangeRate, setSolExchangeRate] = useState(null); // To store SOL-USD rate
+  const [solValue, setSolValue] = useState(null); // To store calculated SOL value
+
+  useEffect(() => {
+    // Fetch SOL to USD exchange rate
+    const fetchExchangeRate = async () => {
+      try {
+        const response = await fetch(
+          "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd"
+        );
+        const data = await response.json();
+        setSolExchangeRate(data.solana.usd); // Set the SOL-USD rate
+      } catch (error) {
+        console.error("Error fetching exchange rate:", error);
+      }
+    };
+
+    fetchExchangeRate();
+  }, []);
+
+  // Calculate the SOL value when solBalance or exchangeRate changes
+  useEffect(() => {
+    if (solExchangeRate !== null && solBalance !== null) {
+      setSolValue((solBalance / solExchangeRate).toFixed(8)); // Calculate SOL value and format to 8 decimals
+    }
+  }, [solExchangeRate, solBalance]);
+
+
+
+
   return (
     <div className='layout'>
       <DesktopUserNav />
@@ -70,7 +308,7 @@ function Dashboard() {
       </NavLink>
 
 
-       <p className='desktop'>Dashboard</p>
+       <p className='desktop'>Welcome, {user.displayName}</p>
 
        <div className="actions desktop" >
 
@@ -79,25 +317,25 @@ function Dashboard() {
         <IoIosArrowDown />
 
         {menuVisible && (
-                 <div className="quick-actions" ref={menuRef}>
+                         <div className="quick-actions" ref={menuRef}>
 
-                    <NavLink className="settings top">
-                        <RiSendPlaneLine className='icon' /> Send Money
-                    </NavLink>
-
-                    <NavLink className="settings">
-                        <MdFormatListBulletedAdd  className='icon' /> New Investment
-                    </NavLink>
-
-                    <NavLink className="settings">
-                        <RiExchangeDollarLine  className='icon'/> Convert Funds
-                    </NavLink>
-
-                    <NavLink className="logout">
-                        <BiTransfer  className='icon' /> Fund Wallet
-                    </NavLink>
-
-                    </div>
+                         <NavLink to="/withdrawals" className="settings top">
+                             <RiSendPlaneLine className='icon' /> Send Money
+                         </NavLink>
+     
+                         <NavLink to="/investments" className="settings">
+                             <MdFormatListBulletedAdd  className='icon' /> New Investment
+                         </NavLink>
+     
+                         <NavLink to="/deposits" state={{ currentPage: "convert" }} className="settings">
+                             <RiExchangeDollarLine  className='icon'/> Convert Funds
+                         </NavLink>
+     
+                         <NavLink to="/deposits" className="logout">
+                             <BiTransfer  className='icon' /> Fund Wallet
+                         </NavLink>
+     
+                         </div>
                 )}
         </div>
 
@@ -139,14 +377,25 @@ function Dashboard() {
 
             <div className="available">
               <div className="total">
-                  $0.014
+              <BsCurrencyDollar />{usdtBalance !== null || bitcoinBalance !== null || ethereumBalance !== null || solBalance !== null ? (
+          <>
+            {[
+              usdtBalance || 0, 
+              bitcoinBalance || 0, 
+              ethereumBalance || 0, 
+              solBalance || 0,
+            ].reduce((acc, balance) => acc + balance, 0).toFixed(2)}
+          </>
+        ) : (
+          "Loading..."
+        )}
               </div>
               <p>Available balance</p>
             </div>
 
             </div>
 
-            <div className="account">
+            <NavLink to="/deposits" state={{ currentBalance: "USDT" }} className="account">
 
             <div className="name-logo">
                 <img src={USDT} alt="total" />
@@ -155,14 +404,18 @@ function Dashboard() {
 
             <div className="available">
               <div className="total">
-                  $0.014
+              <BsCurrencyDollar />{usdtBalance !== null ? `${usdtBalance.toFixed(2)}` : "Loading..."}
+                  
               </div>
+              <p>
+              {usdtBalance !== null ? `${usdtBalance.toFixed(2)} USDT` : "Loading..."}
+            </p>
               <p>Available balance</p>
             </div>
 
-            </div>
+            </NavLink>
 
-            <div className="account">
+            <NavLink to='/deposits' className="account" state={{ currentBalance: "BTC" }}>
 
             <div className="name-logo">
                 <img src={bitcoin} alt="total" />
@@ -171,14 +424,19 @@ function Dashboard() {
 
             <div className="available">
               <div className="total">
-                  $ 3,200.43
+              <BsCurrencyDollar />{bitcoinBalance !== null ? `${bitcoinBalance.toFixed(2)}` : "Loading..."}
               </div>
+              <p className='asset-value'>
+            {btcValue !== null
+              ? `${btcValue} BTC`
+              : "Fetching wallet..."}
+            </p>
               <p>Available balance</p>
             </div>
 
-            </div>
+            </NavLink>
 
-            <div className="account">
+            <NavLink to="/deposits" state={{ currentBalance: "ETH" }} className="account">
 
             <div className="name-logo">
                 <img src={Eth} alt="total" />
@@ -187,14 +445,19 @@ function Dashboard() {
 
             <div className="available">
               <div className="total">
-                  $ 564.76
+              <BsCurrencyDollar /> {ethereumBalance !== null ? `${ethereumBalance.toFixed(2)}` : "Loading..."}
               </div>
+                  <p>
+            {ethValue !== null
+              ? `${ethValue} ETH`
+              : "Fetching wallet..."}
+          </p>
               <p>Available balance</p>
             </div>
 
-            </div>
+            </NavLink>
 
-            <div className="account">
+            <NavLink to="/deposits" state={{ currentBalance: "SOL" }} className="account">
 
             <div className="name-logo">
                 <img src={sol} alt="total" />
@@ -203,12 +466,15 @@ function Dashboard() {
 
             <div className="available">
               <div className="total">
-                  $0.014
+              <BsCurrencyDollar /> {solBalance !== null ? `${solBalance.toFixed(2)}` : "Loading..."}
               </div>
+              <p>
+              {solValue !== null ? `${solValue} SOL` : "Fetching wallet..."}
+            </p>
               <p>Available balance</p>
             </div>
 
-            </div>
+            </NavLink>
 
           </div>
 
@@ -221,26 +487,27 @@ function Dashboard() {
 
           <div className="activities">
 
-            <NavLink className="activity desktop">
+            <NavLink  to="/investments" className="activity desktop">
                 <MdFormatListBulletedAdd  className='icon' />
               New Investment
             </NavLink>  
-             <NavLink className="activity">
+             <NavLink  to="/deposits" className="activity">
                 <IoWalletOutline  className='icon' />
               Deposit
             </NavLink>
-            <NavLink className="activity">
+            <NavLink  to="/deposits" className="activity" state={{ currentPage: "convert" }}
+            >
                 <RiExchangeDollarLine  className='icon' />
               Convert
             </NavLink>
-            <NavLink className="activity">
+            <NavLink  to="/withdrawals" className="activity">
               <RiSendPlaneLine className='icon' />
              Withdraw
             </NavLink>
 
           </div>
 
-            <NavLink className="activity mobile">
+            <NavLink to="/investments" className="activity mobile">
                 <MdFormatListBulletedAdd  className='icon' />
               New Investment
             </NavLink>  
@@ -320,7 +587,7 @@ function Dashboard() {
 
               </div>
 
-             <div className='all-wallets'>View All Address <MdKeyboardArrowRight className='icon' /></div>
+             <NavLink to="/deposits" className='all-wallets'>View All Address <MdKeyboardArrowRight className='icon' /></NavLink>
 
           
 

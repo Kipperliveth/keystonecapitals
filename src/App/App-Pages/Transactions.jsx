@@ -10,8 +10,16 @@ import { RiExchangeDollarLine } from "react-icons/ri";
 import { BiTransfer } from "react-icons/bi";
 import { RiSendPlaneLine } from "react-icons/ri";
 import { MdFormatListBulletedAdd } from "react-icons/md";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { txtdb } from '../../firebase-config';
+import { auth } from '../../firebase-config';
+import {
+  onAuthStateChanged
+} from "firebase/auth";
 
 function Transactions() {
+  const [user, setUser] = useState({});
+
      // State to track if the sidebar is visible
      const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 
@@ -42,6 +50,53 @@ function Transactions() {
      };
    }, []);
  
+
+    //transactions//
+    const [transactions, setTransactions] = useState([]);
+  
+    const currentUser = auth.currentUser;
+
+    const fetchTransactions = async () => {
+
+      if(currentUser){
+
+        const userId = currentUser.uid;
+        const transactionsRef = collection(txtdb, "users", userId, "transactions");
+  
+        try {
+          // Query the transactions, ordered by date (descending)
+          const q = query(transactionsRef, orderBy("date", "desc"));
+          const querySnapshot = await getDocs(q);
+  
+          // Map the query results into an array
+          const transactionsList = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+  
+          setTransactions(transactionsList); // Store transactions in state
+        } catch (error) {
+          console.error("Error fetching transactions: ", error);
+        }
+      }
+
+    };
+
+
+    useEffect(() => {
+      fetchTransactions();
+    }); 
+  
+
+    useEffect(() => {
+      const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        setUser(currentUser || null); // Ensures `user` is set to null if `currentUser` is null
+      });
+    
+      // Cleanup function to unsubscribe from the listener when component unmounts
+      return () => unsubscribe();
+    }, [auth]);
+
   return (
     <div className='layout'>
     <DesktopUserNav />
@@ -67,25 +122,25 @@ function Transactions() {
         <IoIosArrowDown />
 
         {menuVisible && (
-                 <div className="quick-actions" ref={menuRef}>
+                        <div className="quick-actions" ref={menuRef}>
 
-                    <NavLink className="settings top">
-                        <RiSendPlaneLine className='icon' /> Send Money
-                    </NavLink>
-
-                    <NavLink className="settings">
-                        <MdFormatListBulletedAdd  className='icon' /> New Investment
-                    </NavLink>
-
-                    <NavLink className="settings">
-                        <RiExchangeDollarLine  className='icon'/> Convert Funds
-                    </NavLink>
-
-                    <NavLink className="logout">
-                        <BiTransfer  className='icon' /> Fund Wallet
-                    </NavLink>
-
-                    </div>
+                        <NavLink to="/withdrawals" className="settings top">
+                            <RiSendPlaneLine className='icon' /> Send Money
+                        </NavLink>
+    
+                        <NavLink to="/investments" className="settings">
+                            <MdFormatListBulletedAdd  className='icon' /> New Investment
+                        </NavLink>
+    
+                        <NavLink to="/deposits" state={{ currentPage: "convert" }} className="settings">
+                            <RiExchangeDollarLine  className='icon'/> Convert Funds
+                        </NavLink>
+    
+                        <NavLink to="/deposits" className="logout">
+                            <BiTransfer  className='icon' /> Fund Wallet
+                        </NavLink>
+    
+                        </div>
                 )}
         </div>
 
@@ -116,10 +171,51 @@ function Transactions() {
 
     <div className="pages-content">
 
-Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis dolore a, neque beatae libero facilis debitis nostrum. Doloremque rem nobis quidem placeat ab hic dolorem asperiores. Totam vero ab nam!Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis dolore a, neque beatae libero facilis debitis nostrum. Doloremque rem nobis quidem placeat ab hic dolorem asperiores. Totam vero ab nam!Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis dolore a, neque beatae libero facilis debitis nostrum. Doloremque rem nobis quidem placeat ab hic dolorem asperiores. Totam vero ab nam!Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis dolore a, neque beatae libero facilis debitis nostrum. Doloremque rem nobis quidem placeat ab hic dolorem asperiores. Totam vero ab nam!Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis dolore a, neque beatae libero facilis debitis nostrum. Doloremque rem nobis quidem placeat ab hic dolorem asperiores. Totam vero ab nam!Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis dolore a, neque beatae libero facilis debitis nostrum. Doloremque rem nobis quidem placeat ab hic dolorem asperiores. Totam vero ab nam!Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis dolore a, neque beatae libero facilis debitis nostrum. Doloremque rem nobis quidem placeat ab hic dolorem asperiores. Totam vero ab nam!
-</div>
+    <div className="transaction-history">
+
+    {transactions.length === 0 ? ( // Check if there are no transactions
+          <div className='nothing-yet'>
+            <BiTransfer className="icon" />
+          <h4>No transactions yet</h4>  
+          <p>Once you make a payment or convert funds, the information appears here</p>
+            </div>
+        ) : (
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Category</th>
+          </tr>
+        </thead>
+        <tbody>
+          {transactions.map((transaction) => (
+            <tr key={transaction.id}>
+              <td>{new Date(transaction.date).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+          })}</td>
+              <td>${transaction.amount.toFixed(2)}</td>
+              <td>{transaction.description}</td>
+              <td>{transaction.transactionStatus}</td>
+              <td>{transaction.category}</td>
+
+            </tr>
+          ))}
+        </tbody>
+      </table>
+        )}
+
+        
+    </div>
+    </div>
 
     </div>
+
+
 
   </div>
   )

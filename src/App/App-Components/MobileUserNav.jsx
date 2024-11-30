@@ -14,9 +14,15 @@ import { RiExchangeDollarLine } from "react-icons/ri";
 import { RiSendPlaneLine } from "react-icons/ri";
 import { MdFormatListBulletedAdd } from "react-icons/md";
 import { IoWalletOutline } from "react-icons/io5";
-
+import {
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
+import { auth } from '../../firebase-config';
 
 function UserNav({ onClose }) {
+  const [user, setUser] = useState({});
+
   const [menuVisible, setMenuVisible] = useState(false);
   const [quickMenuVisible, setQuickMenuVisible] = useState(false); // New state for quick actions menu
   const menuRef = useRef(null);
@@ -47,6 +53,21 @@ function UserNav({ onClose }) {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        console.log("User is logged in:", currentUser);
+        setUser(currentUser);
+        
+      } else {
+        console.log("No user is logged in.");
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup subscription on component unmount
   }, []);
 
   return (
@@ -129,8 +150,8 @@ function UserNav({ onClose }) {
 
 
             <div className="user">
-                <div className="icon"><p>K</p></div>
-                <div className="username">Kipper</div>
+                <div className="icon"><p>{user.displayName ? user.displayName.charAt(0).toUpperCase() : ""}</p></div>
+                <div className="username"> {user.displayName}</div>
                 <HiOutlineDotsHorizontal className='options' onClick={handleToggleMenu}/>
 
                 {menuVisible && (

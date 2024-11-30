@@ -69,23 +69,23 @@ function Widthdrawals() {
         {menuVisible && (
                  <div className="quick-actions" ref={menuRef}>
 
-                    <NavLink className="settings top">
-                        <RiSendPlaneLine className='icon' /> Send Money
-                    </NavLink>
+                 <NavLink to="/withdrawals" className="settings top">
+                     <RiSendPlaneLine className='icon' /> Send Money
+                 </NavLink>
 
-                    <NavLink className="settings">
-                        <MdFormatListBulletedAdd  className='icon' /> New Investment
-                    </NavLink>
+                 <NavLink to="/investments" className="settings">
+                     <MdFormatListBulletedAdd  className='icon' /> New Investment
+                 </NavLink>
 
-                    <NavLink className="settings">
-                        <RiExchangeDollarLine  className='icon'/> Convert Funds
-                    </NavLink>
+                 <NavLink to="/deposits" state={{ currentPage: "convert" }} className="settings">
+                     <RiExchangeDollarLine  className='icon'/> Convert Funds
+                 </NavLink>
 
-                    <NavLink className="logout">
-                        <BiTransfer  className='icon' /> Fund Wallet
-                    </NavLink>
+                 <NavLink to="/deposits" className="logout">
+                     <BiTransfer  className='icon' /> Fund Wallet
+                 </NavLink>
 
-                    </div>
+                 </div>
                 )}
         </div>
 

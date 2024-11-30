@@ -1,0 +1,56 @@
+.layout{
+
+    .content{
+
+        .pages-content{
+
+            .transaction-history{
+
+                .nothing-yet{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+                    justify-content: center;
+                    text-align: center;
+                    background: white;
+                    padding-block: 5rem;
+                    border-radius: 10px;
+                    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+                    font-size: 14px;
+                    margin-block: 2rem;
+                    line-height: 1.5;
+
+                    .icon{
+                      font-size: 25px;
+                      display: flex;
+                      align-self: center;
+                    }
+                  }
+
+                table{
+                    background: white;
+                    width: 100%;
+                    border-radius: 10px;
+                    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+                    text-align: center;
+                    padding: 1rem;
+                }
+
+                table tr th{
+                    color: hsl(0, 0%, 35%);
+                    padding: 1rem;
+                    font-family: 500;
+                }
+
+                table tbody tr td{
+                    border-top: 1px solid hsl(0, 0%, 90%);
+                    transition: background 0.3s ease;
+                    padding-block: 1.5rem;
+                    font-size: 14px;
+                    color: #333;
+                }
+            }
+        }
+    }
+}

@@ -10,11 +10,15 @@ import { MdOutlineSettings } from "react-icons/md";
 import { MdOutlineLogout } from "react-icons/md";
 import { IoWalletOutline } from "react-icons/io5";
 import { RiSendPlaneLine } from "react-icons/ri";
-
-
-
+import {
+    onAuthStateChanged,
+    signOut,
+  } from "firebase/auth";
+import { auth } from '../../firebase-config';
 
 function DesktopUserNav() {
+  const [user, setUser] = useState({});
+
     const [menuVisible, setMenuVisible] = useState(false);
     const menuRef = useRef(null);
 
@@ -36,6 +40,22 @@ function DesktopUserNav() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        console.log("User is logged in:", currentUser);
+        setUser(currentUser);
+        
+      } else {
+        console.log("No user is logged in.");
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup subscription on component unmount
+  }, []);
+
   return (
 
     <div className='DesktopUserNav'>
@@ -86,8 +106,8 @@ function DesktopUserNav() {
 
 
             <div className="user">
-                <div className="icon"><p>K</p></div>
-                <div className="username">Kipper</div>
+                <div className="icon"><p>{user.displayName ? user.displayName.charAt(0).toUpperCase() : ""}</p></div>
+                <div className="username">{user.displayName}</div>
                 <HiOutlineDotsHorizontal className='options' onClick={handleToggleMenu}/>
 
                 {menuVisible && (

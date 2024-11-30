@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 import { getAuth, updateProfile, onAuthStateChanged } from "firebase/auth";
 import { ImSpinner8 } from "react-icons/im";
 import { FaUser, FaCheckCircle, FaRocket } from "react-icons/fa"; // Animated icons
+import { useNavigate } from "react-router-dom";
+
 
 const auth = getAuth();
 
 function Onboarding() {
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -50,6 +54,11 @@ function Onboarding() {
     return () => unsubscribe();
   }, []);
 
+  
+  const access = () => {
+    navigate("/dashboard"); // Redirect to dashboard if access is granted
+  }
+
   return (
     <div style={styles.container}>
       {/* Input Card for Username */}
@@ -80,7 +89,7 @@ function Onboarding() {
             <FaCheckCircle style={styles.animatedIcon} className="bounce" />
             <h2 style={styles.popupHeading}>Welcome onboard, {username}!</h2>
             <p style={styles.popupText}>We are excited to have you with us!</p>
-            <button style={styles.ctaButton}>
+            <button onClick={access} style={styles.ctaButton} >
               <FaRocket style={styles.rocketIcon} /> Start Investing
             </button>
           </div>

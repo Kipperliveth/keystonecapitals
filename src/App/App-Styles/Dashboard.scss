@@ -2,7 +2,7 @@
     user-select: none;
 
     .dashboard-container{
-        background: hsl(220, 23%, 99%);
+        background: hsl(220, 23%, 98%);
 
     
         &::-webkit-scrollbar {
@@ -13,12 +13,13 @@
             margin-top: 5rem;
             padding: 2.8rem 2.8rem 1.6rem 2.8rem;
             position: relative;
+        
 
             .accounts-container{
             position: relative;
                 display: flex;
                 align-items: center;
-                gap: 1.5rem;
+                gap: 1rem;
                 padding: 5px;
                 white-space: nowrap;
                 overflow-x: auto;
@@ -30,16 +31,18 @@
                 }
 
                 .account{
+                    text-decoration: none;
+                    color: #252525;
                 background: white;
-
-                    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
-                    padding: 1rem;
-                    border-radius: 20px;
-                    cursor: pointer;
-
-                    height: 150px;
-                    display: flex;
-                    flex-direction: column;
+                
+                box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+                padding: 1rem;
+                border-radius: 20px;
+                cursor: pointer;
+                
+                height: 165px;
+                display: flex;
+                flex-direction: column;
                     justify-content: space-between;
                     min-width: 250px !important;
 
@@ -62,8 +65,8 @@
                             }
                         }
                         img{
-                            width: 50px;
-                            height: 50px;
+                            width: 40px;
+                            height: 40px;
                         }
                     }
 
@@ -73,8 +76,12 @@
                         gap: .5rem;
 
                         .total{
-                            font-weight: 400;
+                            color: hsl(0, 0%, 30%);
+                            font-weight: 500;
                             letter-spacing: 0.5px;
+                            display: flex;
+                            align-items: center;
+                            font-size: 18px;
                         }
                         p{
                             color: #888;
@@ -126,6 +133,7 @@
                         font-weight: 500;
                         transition: ease-in-out;
                         color: #252525;
+
 
                         .icon{
                             color: rgba(100,43,115,1)  ;
@@ -230,6 +238,7 @@
                         color: #642B73;
                         font-weight: 500;
                         justify-content: flex-end;
+                        text-decoration: none;
 
                         .icon{
                             font-size: 16px;

@@ -1,7 +1,7 @@
 .layout .content .pages-content{
     padding: 8rem;
     padding-inline: 3rem;
-    background: hsl(220, 23%, 99%);
+    background: hsl(220, 23%, 98%);
 
 
     .deposits{
@@ -23,15 +23,25 @@
                 align-items: center;
                 gap: .5rem;
                 color: rgba(100,43,115,1);
+                text-decoration: none;
+
+
+                .tabicon{
+                  font-size: 20px;
+                }
 
             }
         }
 
         .add-funds{
             margin-block: 3rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+
+            .funding-container{
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+
+            }
             
             .tab{
                     border-radius: 20px;
@@ -39,7 +49,136 @@
                     background: white;
                     box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
                     padding: 1rem;
+                    
+
+                    h4{
+                        font-weight: 600;
+                        letter-spacing: .25px;
+                    }
+
+                    .aza{
+                        margin-top: 2rem;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 1.5rem;
+
+                        .address-header, .network{
+                            color: hsl(0, 0%, 50%);
+                            font-size: 14px;
+                        }
+                        .network{
+                            margin-top: .5rem;
+                        }
+
+                        .address{
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                            cursor: pointer;
+
+                            .copy{
+                                color: hsl(0, 0%, 50%);
+                                cursor: pointer;
+                                font-size: 16px;
+                            }
+                        }
+                    }
+
+
                 }
+
+                .declaration.tab{
+                   
+                    .asset-info{
+                        margin-block: 1.5rem;
+                        display: flex;
+                        align-items: center;
+                        border: 1px solid #888;
+                        font-size: 14px;
+                        padding: 10px;
+                        border-radius: 20px;
+                        gap: 10px;
+
+                        img{
+                            width: 20px;
+                            height: 20px;
+                        }
+                    }
+
+                    .transfer-form{
+                        display: flex;
+                        flex-direction: column;
+                        gap: 1rem;
+
+                        label{
+                            color: hsl(0, 0%, 50%);
+                            font-size: 14px;
+                        }
+
+                        input{
+                            padding: 10px;
+                            border-radius: 40px;
+                            border: 1px solid #888;
+                            font-size: 14px;
+                            width: 100%;
+                            outline: none;
+                            transition: border-color 0.3s;
+                        }
+                    }
+
+                    .transfer-form input[type="number"]:focus {
+                        border-color:rgba(100,43,115, 0.8);
+                      }
+
+                      .submit-btn {
+                        position: relative;
+                        margin-top: 0.5rem;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        font-weight: 600;
+                        color: #fff;
+                        border: none;
+                        border-radius: 20px;
+                        cursor: pointer;
+                        background: radial-gradient(circle farthest-corner at 10% 20%, rgba(100, 43, 115, 1) 0%, rgba(4, 0, 4, 1) 90%);
+                        overflow: hidden; /* Ensures ::before stays within rounded edges */
+                        transition: transform 0.3s ease; /* Only transition for scale effect */
+                      }
+                      
+                      .submit-btn::before {
+                        content: "Confirm Transfer";
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        border-radius: inherit; /* Matches button's rounded corners */
+                        background: radial-gradient(circle farthest-corner at 80% 80%, rgba(150, 53, 165, 1) 0%, rgba(14, 10, 24, 1) 90%);
+                        opacity: 0; /* Hidden initially */
+                        transition: opacity 0.4s ease; /* Smooth fade for hover */
+                        z-index: 0; /* Places it behind button text */
+                      }
+                      
+                      .submit-btn:hover::before {
+                        opacity: 1; /* Makes overlay visible on hover */
+                      }
+                      
+                      .submit-btn:hover {
+                        transform: scale(.95); /* Scale effect on hover */
+                      }
+                      
+                      /* Set the button text on top of the ::before overlay */
+                      .submit-btn > * {
+                        position: relative;
+                        z-index: 1; /* Ensures text is on top */
+                      }
+                      
+
+                }
+                
 
                 .wallet{
                     display: flex;
@@ -57,12 +196,29 @@
                             flex-direction: column;
                             padding-inline: 1rem;
 
+                            .asset-balance{
+                              display: flex;
+                              flex-direction: column;
+                              gap: 1rem;
 
+                              .total{
+                                display: flex;
+                                align-items: center;
+                                font-weight: 500;
+                                letter-spacing: 0.5px;
+                                color: #555;
+                                font-size: 18px;
+                              }
+                            }
+
+                            
                             .account-balance{
                                 font-size: 20px;
                                 font-weight: 500;
                                 letter-spacing: 1px;
+                                display: flex;
                             }
+                            
 
                             p{
                                 display: flex;
@@ -162,7 +318,208 @@
                         padding: .5rem;
                     }
                 }
+
+             .recent-transactions{
+                margin-block: 2rem;
+                border-radius: 20px;
+                border: 2px dashed hsl(0, 0%, 15%);
+
+                .recent-transactions-container{
+                    padding: 1.5rem;
+
+                    .nothing-yet{
+                      display: flex;
+                      flex-direction: column;
+                      gap: 1rem;
+                      justify-content: center;
+                      text-align: center;
+
+                      font-size: 14px;
+                      margin-block: 2rem;
+                      line-height: 1.5;
+
+                      .icon{
+                        font-size: 18px;
+                        display: flex;
+                        align-self: center;
+                      }
+                    }
+
+                    table{
+                      width: 100%;
+                      border-radius: 10px;
+                      // box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+                      text-align: center;
+                      padding-inline: 1rem;
+                      margin-block: 1rem;
+                  }
+  
+                  table tr th{
+                      color: hsl(0, 0%, 35%);
+                      padding: 1rem;
+                      font-family: 500;
+                  }
+  
+                  table tbody tr td{
+                      border-bottom: 1px solid hsl(0, 0%, 90%);
+                      transition: background 0.3s ease;
+                      padding-block: 1.5rem;
+                      font-size: 14px;
+                      color: #333;
+
+                    }
+
+                    .all-transactions{
+                      width: 100%;
+                      display: flex;
+                      justify-content: flex-end;
+                      a{
+                        display: flex;
+                        align-items: center;
+                        text-decoration: none;
+                        font-weight: 500;
+                        font-size: 14px;
+                        color: rgba(100,43,115,1)  ;
+
+                      }
+                    }
+
+
+                  
+                    
+                }
+             }   
             
+        }
+
+        .convert-funds{
+            margin-block: 3rem;
+
+            .conversion-container{
+                .crypto-converter {
+                    width: 400px;
+                  
+                    .converter-section {
+                      margin-bottom: 20px;
+                  
+                      label {
+                        font-size: 14px;
+                        font-weight: bold;
+                        display: block;
+                        margin-bottom: 15px;
+                      }
+                  
+                      .input-group {
+                        display: flex;
+                        align-items: center;
+                        border: 1px solid #ccc;
+                        border-radius: 5px;
+                        overflow: hidden;
+                  
+                        input {
+                          flex: 1;
+                          border: none;
+                          padding: 10px;
+                          font-size: 16px;
+                  
+                          &:focus {
+                            outline: none;
+                          }
+                        }
+                  
+                        select {
+                          border: none;
+                          padding: 10px;
+                          font-size: 16px;
+                          background-color: #F0F1FA;
+                          cursor: pointer;
+                  
+                          &:focus {
+                            outline: none;
+                          }
+                        }
+                      }
+                  
+                      .balance {
+                        font-size: 12px;
+                        color: #666;
+                        margin-top: 5px;
+                      }
+                    }
+
+                    .error-message {
+                        color: red;
+                        font-size: 14px;
+                        margin: 10px 0;
+                        text-align: center;
+                      }
+                  
+                    .exchange-rate {
+                      font-size: 14px;
+                      color: #555;
+                      margin-bottom: 15px;
+                      text-align: center;
+                    }
+                  
+                    .convert-btn {
+                      width: 100%;
+                      padding: 12px;
+                      color: #fff;
+                      border: none;
+                      border-radius: 5px;
+                      font-size: 16px;
+                      cursor: pointer;
+                      font-weight: 600;
+                      background: radial-gradient(circle farthest-corner at 10% 20%, rgba(100, 43, 115, 1) 0%, rgba(4, 0, 4, 1) 90%);
+                      overflow: hidden; /* Ensures ::before stays within rounded edges */
+                      transition: transform 0.3s ease; 
+                  
+                      &:hover {
+                       transform: scale(.95);
+                      }
+                    }
+                  
+                    // Responsive design
+                    @media screen and (max-width: 768px) {
+                      width: 90%; // Shrinks the width for tablets and smaller devices
+                      margin: 0 auto;
+                  
+                      .input-group {
+                        flex-direction: column; // Stacks input and dropdown for small screens
+                  
+                        input,
+                        select {
+                          width: 100%; // Makes input and select take the full width
+                          margin-bottom: 10px; // Adds spacing between elements
+                        }
+                      }
+                    }
+                  
+                    @media screen and (max-width: 480px) {
+                      .converter-section {
+                        label {
+                          font-size: 12px; // Slightly smaller labels for very small screens
+                        }
+                  
+                        .balance {
+                          font-size: 10px; // Smaller text for balance
+                        }
+                      }
+                  
+                      .convert-btn {
+                        font-size: 14px; // Reduce button font size
+                        padding: 10px; // Adjust padding
+                      }
+                  
+                      .exchange-rate {
+                        font-size: 12px; // Smaller font size for the exchange rate text
+                      }
+                    }
+                  }
+                  
+                  
+                  
+            }
         }
     }
     }
@@ -173,5 +530,4 @@
 .layout .content .pages-content{
     padding-inline: 1rem;
     border: none;
-    border-bottom: 1px solid red;
  }}
