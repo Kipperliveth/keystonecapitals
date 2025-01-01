@@ -1,0 +1,257 @@
+.layout .content .pages-content{
+    padding: 8rem;
+    padding-inline: 3rem;
+    background: hsl(220, 23%, 98%);
+
+
+    .investments{
+
+        .account-summary-container{
+            display: flex;
+            gap: 2rem;
+            
+            .account-balance{
+                box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+                width: fit-content;
+                padding: 1rem 2rem;
+                border-radius: 20px;
+
+                display: flex;
+                gap: 2rem;
+                align-items: center;
+
+                img{
+                  width: 4rem;
+                  height: 4rem;
+                }
+                
+                .balance{
+                   text-align: center;
+                   line-height: 1.5;
+
+                   h6{
+                    color: #888;
+                    font-weight: 500;
+                   }
+
+                   h6.portfolio{
+                    font-weight: 400;
+                    color: #888;
+                   }
+                }
+            }
+
+            .new-investment{
+                box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+                width: fit-content;
+                padding: 1rem 2rem;
+                border-radius: 20px;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 60%;
+                background: #642B73;
+                transition: 0.2s ease;
+
+                h3{
+                    color: #222;
+                    font-weight: 500;
+                    color: white;
+                }
+
+                .icon{
+                    font-size: 1.5rem;
+                    color: white;
+                }
+
+                &:hover{
+                    transform: scale(0.95);
+                }
+
+            }
+
+        }
+
+        .tabs{
+            margin-block: 2rem;
+            display: flex;
+            gap: 1.25rem;
+
+            button, a{
+                text-decoration: none;
+                padding: 10px 15px;
+                border-radius: 20px;
+                border: none;
+                cursor: pointer;
+                font-weight: 500;
+                font-size: 12px;
+                transition: 0.2s ease;
+
+                &:hover{
+                    background: #642B73;
+                    color: white;
+                    transform: scale(0.97);
+                }
+
+            }
+            
+            button.active{
+                color: white;
+                background: #642B73;
+            }
+            
+            .history{
+                display: flex;
+                align-items: center;
+                gap: 3px;
+                background: #F0F0F0;
+                color: black;
+
+                .icon{
+                    font-size: 14px;
+                }
+            }
+
+        }
+
+    }
+
+}
+
+.layout{
+    /* styles.css */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100000;
+      }
+      
+      /* Popup Container */
+      .popup {
+        background: white;
+        width: 90%;
+        max-width: 500px;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+        position: relative;
+      }
+      
+      /* Close Button */
+      .close-button {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: #e0e0e0;
+        color: #642B73;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      
+      .close-button:hover {
+        background-color: #642B73;
+        color: white;
+      }
+      
+      /* Form Title */
+      .popup h3 {
+        color: #642B73;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      
+      /* Form Group */
+      .form-group {
+        margin-bottom: 15px;
+      }
+      
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 5px;
+      }
+      
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+        box-sizing: border-box;
+      }
+      
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #642B73;
+        box-shadow: 0 0 5px rgba(100, 43, 115, 0.5);
+      }
+      
+      /* Readonly Input */
+      .readonly-input {
+        background-color: #f0f0f0;
+        cursor: not-allowed;
+      }
+      
+      /* Submit Button */
+      button[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        background-color: #642B73;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      
+      button[type="submit"]:hover {
+        background-color: #843c8b;
+      }
+      
+      button[type="submit"]:disabled {
+        background-color: #aaa;
+        cursor: not-allowed;
+      }
+      
+      /* Icon Styling */
+      .icon {
+        font-size: 40px;
+        color: #642B73;
+        transition: color 0.3s ease;
+        cursor: pointer;
+      }
+      
+      .icon:hover {
+        color: #843c8b;
+      }
+      
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .popup {
+          padding: 15px;
+        }
+      
+        button[type="submit"] {
+          font-size: 14px;
+        }
+      }
+}

@@ -459,7 +459,7 @@ if (solExchangeRate !== null && solBalance !== null) {
 }
 }, [solExchangeRate, solBalance]);
 
-
+//
     //transactions//
     const [transactions, setTransactions] = useState([]);
   
