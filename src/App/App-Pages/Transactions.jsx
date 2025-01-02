@@ -198,7 +198,7 @@ function Transactions() {
               month: 'short',
               day: 'numeric',
           })}</td>
-              <td>${transaction.amount.toFixed(2)}</td>
+              <td>${typeof transaction.amount === 'number' ? transaction.amount.toFixed(2) : transaction.amount}</td>
               <td>{transaction.description}</td>
               <td>{transaction.transactionStatus}</td>
               <td>{transaction.category}</td>

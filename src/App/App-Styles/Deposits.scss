@@ -111,14 +111,56 @@
 
                 .icon{
                     font-size: 14px;
+
+                  }
+
+                  &:hover .icon{
+                    color: white;
                 }
             }
 
+         
+
+        }
+
+        .active-investments{
+
+          .first{
+            
+            h3{
+              font-size: 14px;
+              color: #888;
+              font-weight: 400;
+              letter-spacing: 0.5px;
+            }
+
+            .investment-item {
+              border: 1px solid #ddd;
+              padding: 15px;
+              margin: 10px 0;
+              border-radius: 8px;
+              background-color: #f9f9f9;
+            }
+            
+            .investment-item h3 {
+              color: #642B73;
+              margin: 0 0 10px;
+            }
+            
+            .investment-item p {
+              margin: 5px 0;
+              font-size: 14px;
+              color: #333;
+            }
+            
+          }
         }
 
     }
 
 }
+
+//investment form
 
 .layout{
     /* styles.css */

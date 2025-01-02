@@ -220,7 +220,7 @@ function Deposits() {
         amount,
         description: `${cryptoFrom} to ${cryptoTo}`,
         transactionStatus: "Successful",
-        category: "Convert",
+        category: "Conversion",
       };
 
       const transactionsRef = collection(txtdb, `users/${userId}/transactions`);

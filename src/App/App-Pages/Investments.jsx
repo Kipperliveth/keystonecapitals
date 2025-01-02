@@ -13,10 +13,39 @@ import { MdFormatListBulletedAdd } from "react-icons/md";
 import purse from '../../stock/purse.png'
 import { RiPlayListAddLine } from "react-icons/ri";
 import { MdHistory } from "react-icons/md";
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, collection,addDoc, query, orderBy, getDocs } from 'firebase/firestore';
 import { auth, txtdb } from '../../firebase-config';
+import {
+  onAuthStateChanged
+} from "firebase/auth";
 
 function Investments() {
+  const [user, setUser] = useState({});
+
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser || null); // Ensures `user` is set to null if `currentUser` is null
+    });
+  
+    // Cleanup function to unsubscribe from the listener when component unmounts
+    return () => unsubscribe();
+  }, [auth]);
+
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+         
+      } else {
+        console.log("No user is logged in.");
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup subscription on component unmount
+  }, []);
   
      // State to track if the sidebar is visible
      const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -124,19 +153,20 @@ const fetchBalances = async () => {
     setTotalBalance(null);
     setSelectedDuration('');
     setCalculatedReturn('');
+    setInvestmentName('');
   };
 
   const handleAssetChange = (event) => {
     const asset = event.target.value;
     setSelectedAsset(asset);
 
-    if (asset === 'BTC') {
+    if (asset === 'Bitcoin') {
       setTotalBalance(bitcoinBalance);
-    } else if (asset === 'ETH') {
+    } else if (asset === 'Ethereum') {
       setTotalBalance(ethereumBalance);
     } else if (asset === 'USDT') {
       setTotalBalance(usdtBalance);
-    } else if (asset === 'SOL') {
+    } else if (asset === 'Solana') {
       setTotalBalance(solBalance);
     } else {
       setTotalBalance(null);
@@ -273,13 +303,150 @@ if(currentUser){
 
 
 useEffect(() =>{
-document.title= "Deposit"
 fetchEthereumBalance();
 fetchBitcoinBalance();
 fetchUsdtBalance();
 fetchSolBalance();
 })
+
+//submission
+const handleSubmit = async (event) => {
+  event.preventDefault();
+
+  // Validation: Ensure all fields are filled
+  if (!investmentName || !selectedAsset || !investmentAmount || !selectedDuration) {
+    alert('Please fill in all fields.');
+    return;
+  }
+
+  // Calculate the estimated return
+  const durationInterestRates = {
+    "2 weeks": 0.4,
+    "1 month": 0.7,
+    "1 month and 2 weeks": 1.1,
+    "2 months": 2.0,
+  };
+
+  const interestRate = durationInterestRates[selectedDuration];
+  const estimatedReturn = (investmentAmount * (1 + interestRate)).toFixed(2);
+
+  // Prepare data to save
+  const investmentData = {
+    investmentName,
+    selectedAsset,
+    investmentAmount,
+    selectedDuration,
+    estimatedReturn,
+    timestamp: new Date().toISOString(), 
+  };
+
+  try {
+    // Get current user ID (ensure the user is logged in)
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      alert('You need to be logged in to submit an investment.');
+      return;
+    }
+
+    const userId = currentUser.uid;
+
+    // Save the investment data to Firestore
+    const investmentRef = doc(txtdb, "users", userId, "investments", investmentName);
+    await setDoc(investmentRef, investmentData);
+
+    // Fetch the current asset balance from Firestore
+    const assetRef = doc(txtdb, "users", userId, "balances", selectedAsset);
+    const assetSnap = await getDoc(assetRef);
+
+    if (assetSnap.exists()) {
+      const currentBalance = assetSnap.data().balance;
+
+      // Calculate new balance after subtracting the investment amount
+      const newBalance = currentBalance - investmentAmount;
+
+      if (newBalance < 0) {
+        alert('Insufficient balance. Cannot complete this investment.');
+        return;
+      }
+
+      // Update the asset balance in Firestore
+      await updateDoc(assetRef, {
+        balance: newBalance,
+      });
+     
+         // Add transaction history
+         const transactionsRef = collection(txtdb, "users", userId, "transactions");
+         const transactionData = {
+           date: new Date().toISOString(), // ISO format date
+           amount: investmentAmount,
+           description: `Invested ${selectedAsset} in ${investmentName}`,
+           transactionStatus: "Successful",
+           category: "Investment",
+         };
+   
+         await addDoc(transactionsRef, transactionData);
+      
+      alert('Investment submitted successfully!');
+    } else {
+      alert(`Asset ${selectedAsset} does not exist in your balances.`);
+    }
+
+    // Clear input fields
+    setInvestmentName('');
+    setSelectedAsset('');
+    setInvestmentAmount('');
+    setSelectedDuration('');
+
+    togglePopup(); // Close the popup form after submission
+  } catch (error) {
+    console.error("Error submitting investment:", error);
+    alert('An error occurred while submitting your investment. Please try again.');
+  }
+};
+
+//list of investments
+
+const [investments, setInvestments] = useState([]);
+
+  // const currentUser = auth.currentUser;
+
+  const fetchInvestments = async () => {
+
+    if(currentUser){
+      const userId = currentUser.uid; // Ensure user is logged in
+      const investmentsRef = collection(txtdb, "users", userId, "investments");
+
+      try {
   
+        const q = query(investmentsRef, orderBy("timestamp", "desc"));
+        const querySnapshot = await getDocs(q);
+  
+        const fetchedInvestments = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+  
+        setInvestments(fetchedInvestments);
+      } catch (error) {
+        console.error("Error fetching investments:", error);
+      }
+
+    }
+
+  };
+  
+  useEffect(() => {
+  fetchInvestments();
+},); // Empty dependency array to run once when the component mounts
+
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    setUser(currentUser || null); // Ensures `user` is set to null if `currentUser` is null
+  });
+
+  // Cleanup function to unsubscribe from the listener when component unmounts
+  return () => unsubscribe();
+}, [auth]);
 
   return (
     <div className='layout'>
@@ -394,14 +561,41 @@ fetchSolBalance();
 
       {currentPage === 'first' && (
         <div className="first">
-          <h3>Active Investments</h3>
+          <h3>- Active Investments -</h3>
+
+          <div>
+            
+          <h2>Your Investments</h2>
+          {investments.length === 0 ? (
+            <p>No investments found.</p>
+          ) : (
+            investments.map((investment, index) => (
+              <div key={investment.id} className="investment-item">
+                <h3>{investment.investmentName}</h3>
+                <p>Asset: {investment.selectedAsset}</p>
+                <p>Amount: {investment.investmentAmount}</p>
+                <p>Duration: {investment.selectedDuration}</p>
+                <p>Estimated Return: {investment.estimatedReturn}</p>
+                 <p>
+              Submitted On: {new Date(investment.timestamp).toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+              })}
+            </p>
+
+              </div>
+            ))
+          )}
+        </div>
+
         </div>
       )}
 
 
     {currentPage === 'second' && (
         <div className="second">
-          <h3>complete Investments</h3>
+          <h3>Completed Investments</h3>
         </div>
       )}
 
@@ -421,7 +615,7 @@ fetchSolBalance();
               ×
             </button>
             <h3>New Investment</h3>
-            <form >
+            <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label>Investment Name:</label>
                 <input
@@ -436,10 +630,10 @@ fetchSolBalance();
                 <label>Choose Asset:</label>
                 <select value={selectedAsset} onChange={handleAssetChange}>
                   <option value="">Select an asset</option>
-                  <option value="BTC">Bitcoin (BTC)</option>
-                  <option value="ETH">Ethereum (ETH)</option>
+                  <option value="Bitcoin">Bitcoin (BTC)</option>
+                  <option value="Ethereum">Ethereum (ETH)</option>
                   <option value="USDT">Tether (USDT)</option>
-                  <option value="SOL">Solana (SOL)</option>
+                  <option value="Solana">Solana (SOL)</option>
                 </select>
               </div>
 
