@@ -25,11 +25,18 @@ function Navbar() {
     <div style={{ display: shouldHideComponent ? "none" : "block" }}>
         <div className="navigation">
             <div className="navbar">
+            <NavLink 
+            to="/" 
+            className="logo-container" 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            <img src={logo} alt="keystonecapitals" />
+            <div className="name">
+              <h3>KEYSTONE</h3>
+              <p>CAPITALS</p>
+            </div>
+          </NavLink>
 
-                <NavLink to='/' className="logo-container">
-                <img src={logo} alt="keystonecapitals" />
-                <div className="name"><h3>KEYSTONE</h3><p>CAPITALS</p></div>
-                </NavLink>
 
                 <div className="links">
                     {/* <li>

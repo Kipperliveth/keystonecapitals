@@ -124,6 +124,7 @@
                         display: flex;
                         align-items: center;
                         justify-content: center;
+                        text-align: center;
                         gap: .5rem;
                         height: 50px;
                         padding: 1rem;
@@ -133,10 +134,12 @@
                         font-weight: 500;
                         transition: ease-in-out;
                         color: #252525;
+                        font-size: 75%;
 
 
                         .icon{
                             color: rgba(100,43,115,1)  ;
+                            font-size: 20px;
                         }
 
                         &:hover{
@@ -152,6 +155,8 @@
                 .activity.mobile{
                     display: none;
                 }
+
+             
             }
         }
 
@@ -323,32 +328,78 @@
             }
         }
 
-        .transaction-history{
-
-            .transaction-history-container{
+         .recent-transactions{
+                margin-block: 2rem;
                 border-radius: 20px;
-                box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-                position: relative;
-                background: white;
-                padding: 1.6rem;
-                padding-block: 2.5rem;
-                display: flex;
-                flex-direction: column;
-                width: 100%;
-                margin-bottom: 5rem;
-                height: 300px;
+                border: 2px dashed hsl(0, 0%, 15%);
+                width: 90%;
+                margin: 2rem auto;
 
-                .nothing-yet{
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    width: 100%;
-                    text-align: center;
-                    font-size: .8em;
+                .recent-transactions-container{
+                    padding: 1.5rem;
+
+                    .nothing-yet{
+                      display: flex;
+                      flex-direction: column;
+                      gap: 1rem;
+                      justify-content: center;
+                      text-align: center;
+
+                      font-size: 14px;
+                      margin-block: 2rem;
+                      line-height: 1.5;
+
+                      .icon{
+                        font-size: 18px;
+                        display: flex;
+                        align-self: center;
+                      }
+                    }
+
+                    table{
+                      width: 100%;
+                      border-radius: 10px;
+                      // box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+                      text-align: center;
+                      padding-inline: 1rem;
+                      margin-block: 1rem;
+                  }
+  
+                  table tr th{
+                      color: hsl(0, 0%, 35%);
+                      padding: 1rem;
+                      font-family: 500;
+                  }
+  
+                  table tbody tr td{
+                      border-bottom: 1px solid hsl(0, 0%, 90%);
+                      transition: background 0.3s ease;
+                      padding-block: 1.5rem;
+                      font-size: 14px;
+                      color: #333;
+
+                    }
+
+                    .all-transactions{
+                      width: 100%;
+                      display: flex;
+                      justify-content: flex-end;
+                      a{
+                        display: flex;
+                        align-items: center;
+                        text-decoration: none;
+                        font-weight: 500;
+                        font-size: 14px;
+                        color: rgba(100,43,115,1)  ;
+
+                      }
+                    }
+
+
+                  
+                    
                 }
-            }
-        }
+             }   
 
     }
 }
@@ -370,6 +421,8 @@
 
                     .name-logo{
                         gap: 1rem;
+
+
                         img{
                             width: 35px;
                             height: 35px;
@@ -377,6 +430,7 @@
                         p{
                             display: contents;
                             flex-wrap: wrap;
+                            font-size: 14px;
 
                             .br{
                                 display: block;

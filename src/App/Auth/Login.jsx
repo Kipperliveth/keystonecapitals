@@ -55,7 +55,9 @@ import {
         } else {
           setError("Please verify your email first.");
           setIsLoggedIn(false);
-          navigate('/verify-account')
+          // navigate('/verify-account')
+          navigate("/dashboard");
+
           console.log('email not verified')
         }
     

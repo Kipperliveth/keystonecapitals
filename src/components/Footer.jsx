@@ -26,9 +26,8 @@ function Footer() {
                 </div>
 
                 <div className="site-map">
-                    <NavLink>Tradable Assets</NavLink>
-                    <NavLink>Standard Account</NavLink>
-                    <NavLink to='/contact'>Deposits and Withdrawals</NavLink>
+                    <NavLink  to="/#tradables">Tradable Assets</NavLink>
+                    <NavLink to="/#faqs">Deposits and Withdrawals</NavLink>
                     <NavLink>Help Center</NavLink>
                 </div>
 

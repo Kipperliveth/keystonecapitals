@@ -36,6 +36,7 @@ import { IoIosArrowForward } from "react-icons/io";
 function Deposits() {
 
     const [user, setUser] = useState({})
+    const [showLoader, setShowLoader] = useState(false)
 
      // State to track if the sidebar is visible
      const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -198,6 +199,7 @@ function Deposits() {
     const toNewBalance = (balances[cryptoTo] || 0) + amount;
 
     try {
+      setShowLoader(true);
       // Update Firebase balances
       const fromRef = doc(txtdb, `users/${userId}/balances/${cryptoFrom}`);
       const toRef = doc(txtdb, `users/${userId}/balances/${cryptoTo}`);
@@ -228,6 +230,8 @@ function Deposits() {
 
       // Display success message
       setSuccessMessage(`Successfully transferred $${amount.toFixed(2)} from ${cryptoFrom} to ${cryptoTo}.`);
+      setShowLoader(false);
+
     } catch (error) {
       setErrorMessage("Failed to process transfer.");
       setSuccessMessage(""); // Clear success message
@@ -646,7 +650,8 @@ if (solExchangeRate !== null && solBalance !== null) {
       {currentBalance === 'BTC' && (
         <div className='asset-balance'>
             <div className="total">
-              <BsCurrencyDollar />{bitcoinBalance !== null ? `${bitcoinBalance.toFixed(2)}` : "Loading..."}
+            <BsCurrencyDollar />{bitcoinBalance !== null ? bitcoinBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "Loading..."}
+
               </div>
               <p className='asset-value'>
             {btcValue !== null
@@ -659,7 +664,8 @@ if (solExchangeRate !== null && solBalance !== null) {
              {currentBalance === 'ETH' && (
         <div className='asset-balance'>
               <div className="total">
-              <BsCurrencyDollar /> {ethereumBalance !== null ? `${ethereumBalance.toFixed(2)}` : "Loading..."}
+              <BsCurrencyDollar /> {ethereumBalance !== null ? ethereumBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "Loading..."}
+
               </div>
                   <p>
             {ethValue !== null
@@ -672,7 +678,8 @@ if (solExchangeRate !== null && solBalance !== null) {
       {currentBalance === 'USDT' && (
         <div className='asset-balance'>
             <div className="total">
-              <BsCurrencyDollar />{usdtBalance !== null ? `${usdtBalance.toFixed(2)}` : "Loading..."}
+            <BsCurrencyDollar />{usdtBalance !== null ? usdtBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "Loading..."}
+
                   
               </div>
               <p>
@@ -684,7 +691,8 @@ if (solExchangeRate !== null && solBalance !== null) {
       {currentBalance === 'SOL' && (
         <div className='asset-balance'>
             <div className="total">
-              <BsCurrencyDollar /> {solBalance !== null ? `${solBalance.toFixed(2)}` : "Loading..."}
+            <BsCurrencyDollar /> {solBalance !== null ? solBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "Loading..."}
+
               </div>
               <p>
               {solValue !== null ? `${solValue} SOL` : "Fetching wallet..."}
@@ -864,7 +872,7 @@ if (solExchangeRate !== null && solBalance !== null) {
                         day: 'numeric',
                       })}
                     </td>
-                    <td>${transaction.amount.toFixed(2)}</td>
+                    <td>${Number(transaction.amount).toLocaleString()}</td>
                     <td>{transaction.description}</td>
                     <td>{transaction.transactionStatus}</td>
                     <td>{transaction.category}</td>
@@ -956,6 +964,25 @@ if (solExchangeRate !== null && solBalance !== null) {
       </div>
 
       </div>
+
+      {showLoader && (
+        <div className="loader">
+          <div className="spinner">
+            <div></div>   
+            <div></div>    
+            <div></div>    
+            <div></div>    
+            <div></div>    
+            <div></div>    
+            <div></div>    
+            <div></div>    
+            <div></div>    
+            <div></div>    
+          </div>
+
+
+        </div>
+      )}
 
     </div>
   )

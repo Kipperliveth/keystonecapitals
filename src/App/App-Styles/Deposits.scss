@@ -3,6 +3,7 @@
     padding-inline: 3rem;
     background: hsl(220, 23%, 98%);
 
+ 
 
     .investments{
 
@@ -37,7 +38,14 @@
                    h6.portfolio{
                     font-weight: 400;
                     color: #888;
+
+                    span{
+                      color: #28a745;
+                      font-weight: 500;
+                    }
                    }
+
+                   
                 }
             }
 
@@ -125,32 +133,104 @@
 
         .active-investments{
 
-          .first{
+          .first, .second{
+
+            .nothing{
+              color: #888;
+              text-align: center;
+              margin-block: 4rem;
+            }
             
             h3{
               font-size: 14px;
               color: #888;
               font-weight: 400;
               letter-spacing: 0.5px;
+              margin-bottom: 1.6rem;
             }
 
             .investment-item {
               border: 1px solid #ddd;
-              padding: 15px;
+              padding: 16px;
               margin: 10px 0;
               border-radius: 8px;
               background-color: #f9f9f9;
+
+              .name-asset{
+                display: flex;
+                gap: 5px;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 1px solid hsl(0, 0%, 90%);
+                margin-bottom: 1.6rem;
+                padding-bottom: .7rem;
+                padding-top: .35rem;
+                
+              }
+
+              .amount-duration{
+                border-left: 3px solid #642B73;
+                display: flex;
+                flex-direction: column;
+                justify-content: start;
+                padding-inline: 1rem;
+                margin-bottom: .5rem;
+
+                .amount-return{
+                  font-size: 18px;
+                  font-weight: 500;
+                }
+
+                .duration-details{
+                  font-size: 14px;
+                  color: #888;
+                }
+              }
+            .progress-container{
+              width: 100%;
+            display: grid;
+            grid-template-columns: 90% 10%;
+            align-items: center;
+            }
+
+            .progress {
+              position: relative;
+              margin-top: 10px;
+              height: 10px;
+              background-color: #e0e0e0;
+              border-radius: 5px;
+              overflow: hidden;
+
+            }
+              .re{
+                font-size: 12px;
+                line-height: 1.5;
+                color: #888;
+                margin-block: .5rem;
+              }
+
+            .progress-bar {
+              height: 100%;
+              background-color: #4caf50;
+              transition: width 0.3s ease;
+            }
+
+            .progress-percentage {
+              margin-top: 5px;
+              font-size: 14px;
+              text-align: right;
+              color: #555;
+            }
             }
             
-            .investment-item h3 {
+            .investment-item h4 {
               color: #642B73;
-              margin: 0 0 10px;
+              text-transform: uppercase;
+              font-weight: 600;
             }
             
             .investment-item p {
-              margin: 5px 0;
-              font-size: 14px;
-              color: #333;
+              line-height: 2;
             }
             
           }
@@ -163,6 +243,104 @@
 //investment form
 
 .layout{
+  .loader{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0 , 0, 0.5);
+    z-index: 100000000;
+
+    
+
+    .spinner {
+        position: absolute;
+        width: 9px;
+        height: 9px;
+      }
+      
+      .spinner div {
+        position: absolute;
+        width: 50%;
+        height: 150%;
+        background: white;
+        transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1%));
+        animation: spinner-fzua35 1s calc(var(--delay) * 1s) infinite ease;
+      }
+      
+      .spinner div:nth-child(1) {
+        --delay: 0.1;
+        --rotation: 36;
+        --translation: 150;
+      }
+      
+      .spinner div:nth-child(2) {
+        --delay: 0.2;
+        --rotation: 72;
+        --translation: 150;
+      }
+      
+      .spinner div:nth-child(3) {
+        --delay: 0.3;
+        --rotation: 108;
+        --translation: 150;
+      }
+      
+      .spinner div:nth-child(4) {
+        --delay: 0.4;
+        --rotation: 144;
+        --translation: 150;
+      }
+      
+      .spinner div:nth-child(5) {
+        --delay: 0.5;
+        --rotation: 180;
+        --translation: 150;
+      }
+      
+      .spinner div:nth-child(6) {
+        --delay: 0.6;
+        --rotation: 216;
+        --translation: 150;
+      }
+      
+      .spinner div:nth-child(7) {
+        --delay: 0.7;
+        --rotation: 252;
+        --translation: 150;
+      }
+      
+      .spinner div:nth-child(8) {
+        --delay: 0.8;
+        --rotation: 288;
+        --translation: 150;
+      }
+      
+      .spinner div:nth-child(9) {
+        --delay: 0.9;
+        --rotation: 324;
+        --translation: 150;
+      }
+      
+      .spinner div:nth-child(10) {
+        --delay: 1;
+        --rotation: 360;
+        --translation: 150;
+      }
+      
+      @keyframes spinner-fzua35 {
+        0%, 10%, 20%, 30%, 50%, 60%, 70%, 80%, 90%, 100% {
+          transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1%));
+        }
+      
+        50% {
+          transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1.5%));
+        }
+      }
+}
     /* styles.css */
     .overlay {
         position: fixed;

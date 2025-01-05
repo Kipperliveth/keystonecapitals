@@ -20,11 +20,14 @@ import { IoWalletOutline } from "react-icons/io5";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { BsCurrencyDollar } from "react-icons/bs";
 import { auth, txtdb } from '../../firebase-config';
-import { doc, getDoc } from "firebase/firestore";
+import { doc, collection, getDoc } from "firebase/firestore";
+import { getDocs, query, orderBy } from "firebase/firestore";
+
 import {
   onAuthStateChanged,
-  signOut,
 } from "firebase/auth";
+import { IoIosArrowForward } from "react-icons/io";
+
 
 function Dashboard() {
 
@@ -290,6 +293,41 @@ function Dashboard() {
   }, [solExchangeRate, solBalance]);
 
 
+      //transactions//
+      const [transactions, setTransactions] = useState([]);
+    
+      const fetchTransactions = async () => {
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
+          console.log("User not logged in.");
+          return;
+        }
+  
+        const userId = currentUser.uid;
+        const transactionsRef = collection(txtdb, "users", userId, "transactions");
+  
+        try {
+          // Query the transactions, ordered by date (descending)
+          const q = query(transactionsRef, orderBy("date", "desc"));
+          const querySnapshot = await getDocs(q);
+  
+          // Map the query results into an array
+          const transactionsList = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+  
+          setTransactions(transactionsList); // Store transactions in state
+        } catch (error) {
+          console.error("Error fetching transactions: ", error);
+        }
+      };
+  
+  
+      useEffect(() => {
+        fetchTransactions();
+      }); 
+    
 
 
   return (
@@ -379,12 +417,13 @@ function Dashboard() {
               <div className="total">
               <BsCurrencyDollar />{usdtBalance !== null || bitcoinBalance !== null || ethereumBalance !== null || solBalance !== null ? (
           <>
-            {[
-              usdtBalance || 0, 
-              bitcoinBalance || 0, 
-              ethereumBalance || 0, 
-              solBalance || 0,
-            ].reduce((acc, balance) => acc + balance, 0).toFixed(2)}
+           {[
+  usdtBalance || 0, 
+  bitcoinBalance || 0, 
+  ethereumBalance || 0, 
+  solBalance || 0,
+].reduce((acc, balance) => acc + balance, 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+
           </>
         ) : (
           "Loading..."
@@ -404,8 +443,8 @@ function Dashboard() {
 
             <div className="available">
               <div className="total">
-              <BsCurrencyDollar />{usdtBalance !== null ? `${usdtBalance.toFixed(2)}` : "Loading..."}
-                  
+              <BsCurrencyDollar />{usdtBalance !== null ? usdtBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "Loading..."}
+
               </div>
               <p>
               {usdtBalance !== null ? `${usdtBalance.toFixed(2)} USDT` : "Loading..."}
@@ -424,7 +463,8 @@ function Dashboard() {
 
             <div className="available">
               <div className="total">
-              <BsCurrencyDollar />{bitcoinBalance !== null ? `${bitcoinBalance.toFixed(2)}` : "Loading..."}
+              <BsCurrencyDollar />{bitcoinBalance !== null ? bitcoinBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "Loading..."}
+
               </div>
               <p className='asset-value'>
             {btcValue !== null
@@ -445,7 +485,8 @@ function Dashboard() {
 
             <div className="available">
               <div className="total">
-              <BsCurrencyDollar /> {ethereumBalance !== null ? `${ethereumBalance.toFixed(2)}` : "Loading..."}
+              <BsCurrencyDollar /> {ethereumBalance !== null ? ethereumBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "Loading..."}
+
               </div>
                   <p>
             {ethValue !== null
@@ -466,7 +507,7 @@ function Dashboard() {
 
             <div className="available">
               <div className="total">
-              <BsCurrencyDollar /> {solBalance !== null ? `${solBalance.toFixed(2)}` : "Loading..."}
+              <BsCurrencyDollar /> {solBalance !== null ? solBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "Loading..."}
               </div>
               <p>
               {solValue !== null ? `${solValue} SOL` : "Fetching wallet..."}
@@ -648,18 +689,51 @@ function Dashboard() {
         </div>
       </div>
 
-      <div className="transaction-history">
+ <div className="recent-transactions">
 
-        <div className="transaction-history-container">
-        <h5>Transaction History</h5>
+                <div className="recent-transactions-container">
+        <h4>Recent Transactions</h4>
 
-        <div className="nothing-yet">
-          No transactions yet
+        {transactions.length === 0 ? ( // Check if there are no transactions
+          <div className='nothing-yet'>
+            <BiTransfer className="icon" />
+          <h4>No transactions yet</h4>  
+          <p>Once you make a payment or convert funds, the information appears here</p>
+            </div>
+        ) : (
+          <table>
+            <tbody>
+              {transactions
+                .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort transactions by date (newest first)
+                .slice(0, 2) // Get only the first two transactions
+                .map((transaction) => (
+                  <tr key={transaction.id}>
+                    <td>
+                      {new Date(transaction.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </td>
+                    <td>${Number(transaction.amount).toLocaleString()}</td>
+                    <td>{transaction.description}</td>
+                    <td>{transaction.transactionStatus}</td>
+                    <td>{transaction.category}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        )}
+
+        <div className="all-transactions">
+          <NavLink to="/transactions">
+            View All Transactions <IoIosArrowForward />
+          </NavLink>
         </div>
-
-        </div>
-        
       </div>
+
+
+          </div>
 
 
       </div>

@@ -13,7 +13,7 @@ import { MdFormatListBulletedAdd } from "react-icons/md";
 import purse from '../../stock/purse.png'
 import { RiPlayListAddLine } from "react-icons/ri";
 import { MdHistory } from "react-icons/md";
-import { doc, getDoc, setDoc, updateDoc, collection,addDoc, query, orderBy, getDocs } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, collection,addDoc, query, orderBy, getDocs, deleteDoc, where } from 'firebase/firestore';
 import { auth, txtdb } from '../../firebase-config';
 import {
   onAuthStateChanged
@@ -21,6 +21,9 @@ import {
 
 function Investments() {
   const [user, setUser] = useState({});
+const [showLoader, setShowLoader] = useState(false);
+const [showSuccess, setShowSuccess] = useState(true);
+
 
 
   useEffect(() => {
@@ -327,6 +330,26 @@ const handleSubmit = async (event) => {
     "2 months": 2.0,
   };
 
+  //duration mapping
+  const durationMapping = {
+    "2 weeks": 14, // Days
+    "1 month": 30,
+    "1 month and 2 weeks": 45,
+    "2 months": 60,
+  };
+
+  // Calculate expiry date
+function calculateExpiryDate(startDate, durationInDays) {
+  const start = new Date(startDate);
+  const expiry = new Date(start);
+  expiry.setDate(start.getDate() + durationInDays);
+  return expiry.toISOString(); // Return ISO string for consistent formatting
+}
+
+const startDate = new Date().toISOString(); // Timestamp of submission
+const durationInDays = durationMapping[selectedDuration];
+const expiryDate = calculateExpiryDate(startDate, durationInDays);
+
   const interestRate = durationInterestRates[selectedDuration];
   const estimatedReturn = (investmentAmount * (1 + interestRate)).toFixed(2);
 
@@ -337,10 +360,14 @@ const handleSubmit = async (event) => {
     investmentAmount,
     selectedDuration,
     estimatedReturn,
-    timestamp: new Date().toISOString(), 
+    timestamp: new Date().toISOString(),
+    startDate, // The submission timestamp
+    expiryDate, // Calculated expiry date 
   };
 
+  
   try {
+    setShowLoader(true);
     // Get current user ID (ensure the user is logged in)
     const currentUser = auth.currentUser;
     if (!currentUser) {
@@ -387,6 +414,8 @@ const handleSubmit = async (event) => {
          await addDoc(transactionsRef, transactionData);
       
       alert('Investment submitted successfully!');
+      setShowLoader(false);
+
     } else {
       alert(`Asset ${selectedAsset} does not exist in your balances.`);
     }
@@ -447,6 +476,128 @@ useEffect(() => {
   // Cleanup function to unsubscribe from the listener when component unmounts
   return () => unsubscribe();
 }, [auth]);
+
+
+
+const deleteExpiredInvestments = async () => {
+  const currentUser = auth.currentUser;
+
+  if (currentUser) {
+    const userId = currentUser.uid;
+
+    try {
+      const investmentsRef = collection(txtdb, `users/${userId}/investments`);
+      const deletionLogsRef = collection(txtdb, `users/${userId}/deletionLogs`);
+
+      // Fetch all investments
+      const snapshot = await getDocs(investmentsRef);
+      const currentDate = new Date();
+
+      for (const docSnapshot of snapshot.docs) {
+        const investment = docSnapshot.data();
+        const investmentId = docSnapshot.id;
+
+        // Check if the investment's expiry date is in the past and if it is already processed
+        if (new Date(investment.expiryDate) < currentDate && !investment.isProcessed) {
+          const deletionTime = new Date().toISOString();
+
+          // Update the asset balance
+          const assetRef = doc(txtdb, `users/${userId}/balances/${investment.selectedAsset}`);
+          const assetSnap = await getDoc(assetRef);
+
+          if (assetSnap.exists()) {
+            const currentBalance = assetSnap.data().balance || 0;
+            const updatedBalance = currentBalance + parseFloat(investment.estimatedReturn);
+
+            // Update the balance in Firestore
+            await updateDoc(assetRef, { balance: updatedBalance });
+            console.log(`Updated balance for ${investment.selectedAsset}: ${updatedBalance}`);
+          } else {
+            console.warn(`Asset ${investment.selectedAsset} does not exist. Skipping balance update.`);
+          }
+
+          // Log the deletion using setDoc with the investment ID to avoid duplicates
+          await setDoc(doc(deletionLogsRef, investmentId), {
+            investmentId,
+            deletedAt: deletionTime,
+            ...investment, // Include deleted investment details if needed
+          });
+          console.log(`Logged deletion for ${investment.selectedAsset}`);
+
+          // Add transaction history using setDoc
+          const transactionsRef = collection(txtdb, `users/${userId}/transactions`);
+          const transactionData = {
+            date: new Date().toISOString(),
+            amount: investment.estimatedReturn,
+            description: `Cashed out ${investment.estimatedReturn} from ${investment.investmentName}`,
+            transactionStatus: "Successful",
+            category: "Cashback",
+          };
+          await setDoc(doc(transactionsRef, investmentId), transactionData);
+          console.log('Transaction history added successfully');
+
+          // Delete the investment
+          await deleteDoc(docSnapshot.ref);
+          console.log(`Investment deleted successfully.`);
+
+          // Mark the investment as processed
+          await updateDoc(docSnapshot.ref, { isProcessed: true });
+        }
+      }
+
+      console.log("Expired investments deleted successfully, logged, and balances updated.");
+    } catch (error) {
+      console.error("Error deleting expired investments:", error);
+    }
+  }
+};
+
+useEffect(() => {
+  // Check for expired investments when the page loads
+  deleteExpiredInvestments();
+  return
+}, []); // Empty dependency array to run only on initial load
+
+
+//
+//list of investments
+
+const [completedInvestments, setCompletedInvestments] = useState([]);
+
+  // const currentUser = auth.currentUser;
+
+  const fetchCompletedInvestments = async () => {
+
+    if(currentUser){
+      const userId = currentUser.uid; // Ensure user is logged in
+      const investmentsRef = collection(txtdb, "users", userId, "deletionLogs");
+
+      try {
+  
+        const q = query(investmentsRef, orderBy("timestamp", "desc"));
+        const querySnapshot = await getDocs(q);
+  
+        const fetchedInvestments = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+  
+        setCompletedInvestments(fetchedInvestments);
+      } catch (error) {
+        console.error("Error fetching investments:", error);
+      }
+
+    }
+
+  };
+  
+  useEffect(() => {
+    fetchCompletedInvestments();
+},); 
+
+
+
+
 
   return (
     <div className='layout'>
@@ -533,9 +684,26 @@ useEffect(() => {
             <div className="balance">
                 <h6>My Balance</h6>
 
-                <h1>$ 132.0</h1>
+                <h1>${usdtBalance !== null || bitcoinBalance !== null || ethereumBalance !== null || solBalance !== null ? (
+          <>
+           {[
+            usdtBalance || 0, 
+            bitcoinBalance || 0, 
+            ethereumBalance || 0, 
+            solBalance || 0,
+          ].reduce((acc, balance) => acc + balance, 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 
-                <h6 className='portfolio'>Total Portfolio Value: +$12</h6>
+          </>
+        ) : (
+          "Loading..."
+        )}</h1>
+
+<h6 className='portfolio'>
+  Portfolio Value: <span>
+    $
+  {investments.reduce((total, investment) => total + Number(investment.estimatedReturn), 0).toFixed(2)}
+    </span> 
+</h6>
             </div>
 
           </div>
@@ -563,30 +731,67 @@ useEffect(() => {
         <div className="first">
           <h3>- Active Investments -</h3>
 
-          <div>
+          <div className='active-container'>
             
-          <h2>Your Investments</h2>
           {investments.length === 0 ? (
-            <p>No investments found.</p>
+            <p className="nothing">No Active investments.</p>
           ) : (
-            investments.map((investment, index) => (
-              <div key={investment.id} className="investment-item">
-                <h3>{investment.investmentName}</h3>
-                <p>Asset: {investment.selectedAsset}</p>
-                <p>Amount: {investment.investmentAmount}</p>
-                <p>Duration: {investment.selectedDuration}</p>
-                <p>Estimated Return: {investment.estimatedReturn}</p>
-                 <p>
-              Submitted On: {new Date(investment.timestamp).toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'short', 
-                day: 'numeric' 
-              })}
-            </p>
+            investments.map((investment, index) => {
+              const startDate = new Date(investment.timestamp);
+              const expiryDate = new Date(investment.expiryDate);
+              const currentDate = new Date();
 
-              </div>
-            ))
+              // Calculate progress percentage
+              const totalDuration = expiryDate - startDate;
+              const timeElapsed = currentDate - startDate;
+              const progressPercentage = Math.min((timeElapsed / totalDuration) * 100, 100); // Cap at 100%
+
+              return (
+                <div key={investment.id} className="investment-item">
+                  <div className="name-asset">
+                    <h4 title="Investment name">{investment.investmentName}</h4>
+                    <p title="Asset Invested">{investment.selectedAsset}</p>
+                  </div>
+
+                  <div className="amount-duration">
+                    <p className="amount-return">
+                      ${investment.investmentAmount} - ${investment.estimatedReturn}
+                    </p>
+
+                    <p className="duration-details">
+                      {investment.selectedDuration} (
+                      {new Date(investment.timestamp).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}{" "}
+                      -{" "}
+                      {new Date(investment.expiryDate).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                      )
+                    </p>
+                  </div>
+
+                    <div className="progress-container">
+
+                  <div className="progress">
+                    <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
+                  </div>
+                    <p className="progress-percentage">{progressPercentage.toFixed(2)}%</p>
+                    
+                    </div>
+
+   
+                    
+                  
+                </div>
+              );
+            })
           )}
+
         </div>
 
         </div>
@@ -595,7 +800,73 @@ useEffect(() => {
 
     {currentPage === 'second' && (
         <div className="second">
-          <h3>Completed Investments</h3>
+          <h3>- Completed Investments -</h3>
+
+          <div className='active-container'>
+            
+            {completedInvestments.length === 0 ? (
+              <p className="nothing">No Completed Investements.</p>
+            ) : (
+              completedInvestments.map((completedInvestment, index) => {
+                const startDate = new Date(completedInvestment.timestamp);
+                const expiryDate = new Date(completedInvestment.expiryDate);
+                const currentDate = new Date();
+  
+                // Calculate progress percentage
+                const totalDuration = expiryDate - startDate;
+                const timeElapsed = currentDate - startDate;
+                const progressPercentage = Math.min((timeElapsed / totalDuration) * 100, 100); // Cap at 100%
+  
+                return (
+                  <div key={completedInvestment.id} className="investment-item">
+                    <div className="name-asset">
+                      <h4 title="Investment name">{completedInvestment.investmentName}</h4>
+                      <p title="Asset Invested">{completedInvestment.selectedAsset}</p>
+                    </div>
+  
+                    <div className="amount-duration">
+                      <p className="amount-return">
+                        ${completedInvestment.investmentAmount} - ${completedInvestment.estimatedReturn}
+                      </p>
+  
+                      <p className="duration-details">
+                        {completedInvestment.selectedDuration} (
+                        {new Date(completedInvestment.timestamp).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}{" "}
+                        -{" "}
+                        {new Date(completedInvestment.expiryDate).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
+                        )
+                      </p>
+                    </div>
+  
+                      <div className="progress-container">
+  
+                    <div className="progress">
+                      <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
+                    </div>
+                      <p className="progress-percentage">{progressPercentage.toFixed(2)}%</p>
+
+                      <p className='re'>Completed and Added to {completedInvestment.selectedAsset} Balance</p>
+                      
+                      </div>
+  
+     
+                      
+                    
+                  </div>
+                );
+              })
+            )}
+  
+          </div>
+
         </div>
       )}
 
@@ -692,6 +963,41 @@ useEffect(() => {
               </button>
             </form>
           </div>
+        </div>
+      )}
+
+{showLoader && (
+        <div className="loader">
+          <div className="spinner">
+            <div></div>   
+            <div></div>    
+            <div></div>    
+            <div></div>    
+            <div></div>    
+            <div></div>    
+            <div></div>    
+            <div></div>    
+            <div></div>    
+            <div></div>    
+          </div>
+
+
+        </div>
+      )}
+
+{showSuccess && (
+        <div className="loader">
+          
+  <div className="investment-details">
+    <h2>Investment Summary</h2>
+    <p><strong>Investment Name:</strong> {investmentName}</p>
+    <p><strong>Asset:</strong> {selectedAsset}</p>
+    <p><strong>Amount:</strong> ${investmentAmount}</p>
+    <p><strong>Duration:</strong> {selectedDuration}</p>
+    <p><strong>Estimated Return:</strong> ${calculatedReturn}</p>
+  </div>
+
+
         </div>
       )}
 
