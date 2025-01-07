@@ -254,7 +254,103 @@
     background: rgba(0, 0 , 0, 0.5);
     z-index: 100000000;
 
-    
+    .receit-container{
+      background: white;
+      color: black;
+      padding-inline: 1.6rem;
+      border-radius: 1.6rem;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+      .success-message{
+        text-align: center;
+        line-height: 2;
+        margin-bottom: 1.25rem;
+        margin-top: 1.5rem;
+
+        .icon-con{
+          background: hsl(288, 46%, 95%);
+          width: 80px;
+          height: 80px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto;
+          padding: 1rem;
+          border-radius: 50%;
+        }
+
+        p{
+          font-size: 12px;
+          color: #888;
+        }
+
+
+      }
+
+      .investment-details{
+
+        .amount{
+          text-align: center;
+          background: hsl(0, 0%, 98%);
+          margin-bottom: 1rem;
+          border-radius: 1rem;
+          padding-block: 1rem;
+
+
+          h2{
+            color: #642B73;
+            margin-bottom: 5px;
+          }
+
+          p{
+            font-size: 11px;
+            color: #888;
+            font-weight: 500;
+          }
+        }
+
+        .other{
+
+          ol{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 12px;
+            border-bottom: 1px solid #eee;
+            padding-block: 10px;
+          }
+        }
+
+        .buttons{
+          display: flex;
+          flex-direction: column;
+
+          a{
+            text-align: center;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            justify-content: center;
+            color: hsl(0, 0%, 43%);
+            font-size: 13px;
+            gap: .5rem;
+            margin-block: 1rem;
+          }
+
+          button{
+            background: #642B73;
+            color: white;
+            border-radius: 1rem;
+            font-weight: 500;
+            padding-block: 10px;
+            cursor: pointer;
+            border: none !important;
+            margin-bottom: 1rem;
+          }
+        }
+      }
+    }
 
     .spinner {
         position: absolute;

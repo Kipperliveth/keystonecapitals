@@ -18,11 +18,14 @@ import { auth, txtdb } from '../../firebase-config';
 import {
   onAuthStateChanged
 } from "firebase/auth";
+import { CiViewList } from "react-icons/ci";
+import { FaCheck } from "react-icons/fa6";
 
 function Investments() {
   const [user, setUser] = useState({});
 const [showLoader, setShowLoader] = useState(false);
-const [showSuccess, setShowSuccess] = useState(true);
+const [showSuccess, setShowSuccess] = useState(false);
+const [investmentData, setInvestmentData] = useState({});
 
 
 
@@ -353,18 +356,20 @@ const expiryDate = calculateExpiryDate(startDate, durationInDays);
   const interestRate = durationInterestRates[selectedDuration];
   const estimatedReturn = (investmentAmount * (1 + interestRate)).toFixed(2);
 
+  
+
   // Prepare data to save
-  const investmentData = {
+  const dataToSave = {
     investmentName,
     selectedAsset,
     investmentAmount,
     selectedDuration,
     estimatedReturn,
     timestamp: new Date().toISOString(),
-    startDate, // The submission timestamp
-    expiryDate, // Calculated expiry date 
+    startDate,  // The submission timestamp
+    expiryDate, // Calculated expiry date
   };
-
+  setInvestmentData(dataToSave);
   
   try {
     setShowLoader(true);
@@ -379,7 +384,7 @@ const expiryDate = calculateExpiryDate(startDate, durationInDays);
 
     // Save the investment data to Firestore
     const investmentRef = doc(txtdb, "users", userId, "investments", investmentName);
-    await setDoc(investmentRef, investmentData);
+    await setDoc(investmentRef, dataToSave);
 
     // Fetch the current asset balance from Firestore
     const assetRef = doc(txtdb, "users", userId, "balances", selectedAsset);
@@ -413,8 +418,9 @@ const expiryDate = calculateExpiryDate(startDate, durationInDays);
    
          await addDoc(transactionsRef, transactionData);
       
-      alert('Investment submitted successfully!');
+      // alert('Investment submitted successfully!');
       setShowLoader(false);
+      setShowSuccess(true)
 
     } else {
       alert(`Asset ${selectedAsset} does not exist in your balances.`);
@@ -701,7 +707,8 @@ const [completedInvestments, setCompletedInvestments] = useState([]);
 <h6 className='portfolio'>
   Portfolio Value: <span>
     $
-  {investments.reduce((total, investment) => total + Number(investment.estimatedReturn), 0).toFixed(2)}
+    {investments.reduce((total, investment) => total + Number(investment.estimatedReturn), 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+
     </span> 
 </h6>
             </div>
@@ -988,14 +995,77 @@ const [completedInvestments, setCompletedInvestments] = useState([]);
 {showSuccess && (
         <div className="loader">
           
-  <div className="investment-details">
+  {/* <div className="investment-details">
     <h2>Investment Summary</h2>
     <p><strong>Investment Name:</strong> {investmentName}</p>
     <p><strong>Asset:</strong> {selectedAsset}</p>
     <p><strong>Amount:</strong> ${investmentAmount}</p>
     <p><strong>Duration:</strong> {selectedDuration}</p>
     <p><strong>Estimated Return:</strong> ${calculatedReturn}</p>
-  </div>
+  </div> */}
+
+          <div className="receit-container">
+
+              <div className="success-message">
+                <div className='icon-con'>
+              <FaCheck className='icon' />
+                </div>
+              <h2>Success</h2>
+              <p>Your investment has been successfully submitted.</p>
+              </div>
+
+              <div className="investment-details">
+
+                <div className="amount">
+                  <h2>${investmentData.investmentAmount}</h2>
+                  <p>Invested amount</p>
+                </div>
+
+                <div className="other">
+
+                  <ol>
+                 <span>From:</span>
+                 <span>  {new Date(investmentData.timestamp).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}{" "}</span>
+                  </ol>
+
+                  <ol>
+                 <span>To:</span>
+                 <span>  {new Date(investmentData.expiryDate).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}{" "}</span>
+                </ol>
+
+                  <ol>
+                 <span>Asset Used:</span>
+                 <span>{investmentData.selectedAsset}</span>
+                  </ol>
+
+                  <ol>
+                 <span>Returns:</span>
+                 <span>${investmentData.estimatedReturn}</span>
+                  </ol>
+
+                </div>
+
+             <div className="buttons">
+
+                <NavLink to='/transactions'>
+                  <CiViewList /> View Transaction
+                </NavLink>
+
+                <button  onClick={() => setShowSuccess(false)}>Done</button>
+             </div>
+
+
+              </div>
+
+          </div>
 
 
         </div>
