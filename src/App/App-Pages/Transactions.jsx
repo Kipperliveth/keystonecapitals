@@ -16,6 +16,7 @@ import { auth } from '../../firebase-config';
 import {
   onAuthStateChanged
 } from "firebase/auth";
+import { PiHandSwipeLeft } from "react-icons/pi";
 
 function Transactions() {
   const [user, setUser] = useState({});
@@ -171,13 +172,17 @@ function Transactions() {
 
     <div className="pages-content">
 
+    {transactions.length > 0 && (
+  <p className='mobile'><PiHandSwipeLeft /> Swipe horizontally to see more details</p>
+)}
+
     <div className="transaction-history">
 
     {transactions.length === 0 ? ( // Check if there are no transactions
           <div className='nothing-yet'>
             <BiTransfer className="icon" />
           <h4>No transactions yet</h4>  
-          <p>Once you make a payment or convert funds, the information appears here</p>
+          <div className='info'>Once you make a payment or convert funds, <br /> the information appears here</div>
             </div>
         ) : (
       <table>

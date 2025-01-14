@@ -152,9 +152,10 @@
             .investment-item {
               border: 1px solid #ddd;
               padding: 16px;
-              margin: 10px 0;
+              margin: 1rem 0;
               border-radius: 8px;
               background-color: #f9f9f9;
+              box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 
               .name-asset{
                 display: flex;
@@ -189,7 +190,7 @@
             .progress-container{
               width: 100%;
             display: grid;
-            grid-template-columns: 90% 10%;
+            grid-template-columns: 80% 10%;
             align-items: center;
             }
 
@@ -253,6 +254,8 @@
     align-items: center;
     background: rgba(0, 0 , 0, 0.5);
     z-index: 100000000;
+
+ 
 
     .receit-container{
       background: white;
@@ -450,6 +453,45 @@
         align-items: center;
         z-index: 100000;
       }
+
+      .error-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.25rem;
+        padding-block: 1rem;
+
+        .con{
+          .iconn{
+            font-size: 50px !important;
+            color: #D84315;
+          }
+        }
+
+        p{
+          text-align: center;
+          line-height: 1.5;
+          color: #888;
+        }
+
+        .warningheader{
+          color: #FF8C00 !important;
+        }
+
+        .close{
+          background: #FFA500;
+          color: white;
+          padding: 15px 25px;
+          border: none;
+          border-radius: 25px;
+          cursor: pointer;
+          font-weight: 600;
+          box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+        }
+  
+       
+      }
       
       /* Popup Container */
       .popup {
@@ -570,4 +612,24 @@
           font-size: 14px;
         }
       }
+}
+
+
+@media screen and (max-width: 765px) {
+  .layout .content .pages-content{
+    padding-inline: 1.5rem;
+
+    .investments{
+
+      .account-summary-container{
+        flex-direction: column;
+
+        .new-investment{
+          border-radius: 30px;
+        }
+
+      }
+    }
+  }
+
 }

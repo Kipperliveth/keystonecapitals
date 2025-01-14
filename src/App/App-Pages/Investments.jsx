@@ -20,12 +20,16 @@ import {
 } from "firebase/auth";
 import { CiViewList } from "react-icons/ci";
 import { FaCheck } from "react-icons/fa6";
+import { IoIosWarning } from "react-icons/io";
+
 
 function Investments() {
   const [user, setUser] = useState({});
 const [showLoader, setShowLoader] = useState(false);
 const [showSuccess, setShowSuccess] = useState(false);
 const [investmentData, setInvestmentData] = useState({});
+const [errorPopup, setErrorPopup] = useState(false);
+const [errorMessage, setErrorMessage] = useState("");
 
 
 
@@ -186,7 +190,8 @@ const fetchBalances = async () => {
     const value = event.target.value;
 
     if (totalBalance !== null && value > totalBalance) {
-      alert('Investment amount cannot exceed your total balance.');
+      setErrorMessage('Investment amount cannot exceed your total balance.');
+      setErrorPopup(true);
       return;
     }
 
@@ -321,7 +326,8 @@ const handleSubmit = async (event) => {
 
   // Validation: Ensure all fields are filled
   if (!investmentName || !selectedAsset || !investmentAmount || !selectedDuration) {
-    alert('Please fill in all fields.');
+    setErrorMessage('Please fill in all fields.');
+    setErrorPopup(true)
     return;
   }
 
@@ -376,7 +382,8 @@ const expiryDate = calculateExpiryDate(startDate, durationInDays);
     // Get current user ID (ensure the user is logged in)
     const currentUser = auth.currentUser;
     if (!currentUser) {
-      alert('You need to be logged in to submit an investment.');
+      setErrorMessage('You need to be logged in to submit an investment.');
+      setErrorPopup(true);
       return;
     }
 
@@ -397,7 +404,8 @@ const expiryDate = calculateExpiryDate(startDate, durationInDays);
       const newBalance = currentBalance - investmentAmount;
 
       if (newBalance < 0) {
-        alert('Insufficient balance. Cannot complete this investment.');
+        setErrorMessage('Insufficient balance. Cannot complete this investment.');
+        setErrorPopup(true);
         return;
       }
 
@@ -423,7 +431,8 @@ const expiryDate = calculateExpiryDate(startDate, durationInDays);
       setShowSuccess(true)
 
     } else {
-      alert(`Asset ${selectedAsset} does not exist in your balances.`);
+      setErrorMessage(`Asset ${selectedAsset} does not exist in your balances.`);
+      setErrorPopup(true);
     }
 
     // Clear input fields
@@ -435,7 +444,8 @@ const expiryDate = calculateExpiryDate(startDate, durationInDays);
     togglePopup(); // Close the popup form after submission
   } catch (error) {
     console.error("Error submitting investment:", error);
-    alert('An error occurred while submitting your investment. Please try again.');
+    setErrorMessage('An error occurred while submitting your investment. Please try again.');
+    setErrorPopup(true);
   }
 };
 
@@ -704,13 +714,13 @@ const [completedInvestments, setCompletedInvestments] = useState([]);
           "Loading..."
         )}</h1>
 
-<h6 className='portfolio'>
-  Portfolio Value: <span>
-    $
-    {investments.reduce((total, investment) => total + Number(investment.estimatedReturn), 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        <h6 className='portfolio'>
+          Portfolio Value: <span>
+            $
+            {investments.reduce((total, investment) => total + Number(investment.estimatedReturn), 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 
-    </span> 
-</h6>
+            </span> 
+        </h6>
             </div>
 
           </div>
@@ -725,9 +735,9 @@ const [completedInvestments, setCompletedInvestments] = useState([]);
         </div>
 
         <div className="tabs">
-        <button className={currentPage === 'first' ? 'active' : ''} onClick={() => setCurrentPage('first')}>Active Investments</button>
+        <button className={currentPage === 'first' ? 'active' : ''} onClick={() => setCurrentPage('first')}>Active</button>
 
-        <button className={currentPage === 'second' ? 'active' : ''} onClick={() => setCurrentPage('second')}>Completed Investments</button>
+        <button className={currentPage === 'second' ? 'active' : ''} onClick={() => setCurrentPage('second')}>Completed</button>
 
         <NavLink to="/transactions" className='history'><MdHistory className='icon' /> History</NavLink>
         </div>
@@ -859,6 +869,7 @@ const [completedInvestments, setCompletedInvestments] = useState([]);
                       <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
                     </div>
                       <p className="progress-percentage">{progressPercentage.toFixed(2)}%</p>
+                      <p className="progress-percentage">Completed</p>
 
                       <p className='re'>Completed and Added to {completedInvestment.selectedAsset} Balance</p>
                       
@@ -995,14 +1006,6 @@ const [completedInvestments, setCompletedInvestments] = useState([]);
 {showSuccess && (
         <div className="loader">
           
-  {/* <div className="investment-details">
-    <h2>Investment Summary</h2>
-    <p><strong>Investment Name:</strong> {investmentName}</p>
-    <p><strong>Asset:</strong> {selectedAsset}</p>
-    <p><strong>Amount:</strong> ${investmentAmount}</p>
-    <p><strong>Duration:</strong> {selectedDuration}</p>
-    <p><strong>Estimated Return:</strong> ${calculatedReturn}</p>
-  </div> */}
 
           <div className="receit-container">
 
@@ -1070,6 +1073,31 @@ const [completedInvestments, setCompletedInvestments] = useState([]);
 
         </div>
       )}
+
+      {errorPopup && (
+        <div className="overlay">
+          <div className="popup">
+
+        <div className="error-container">
+
+          <div className="con">
+            <IoIosWarning className='iconn' />
+          </div>
+            
+            <h4 className='warningheader'>oops... An Error occured</h4>
+
+            <p>{errorMessage}</p>
+
+            <button onClick={() => setErrorPopup(false)} className="close">
+              Close
+            </button>
+
+        </div>
+          </div>
+        </div>
+      )
+
+      }
 
   </div>
   )

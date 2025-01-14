@@ -3,13 +3,12 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBtIVE1hkmlS3zMgwx0_59x5fbBInTPAL8",
-  authDomain: "tdbank-18f60.firebaseapp.com",
-  projectId: "tdbank-18f60",
-  storageBucket: "tdbank-18f60.firebasestorage.app",
-  messagingSenderId: "587909445300",
-  appId: "1:587909445300:web:fb709c320a6b49c99e89e1",
-  measurementId: "G-PLCGMWD9DW"
+  apiKey: "AIzaSyDpxLFNGkHpubNtJUy_hD6CYmXUAntc8Jw",
+  authDomain: "keystonetest-7f15b.firebaseapp.com",
+  projectId: "keystonetest-7f15b",
+  storageBucket: "keystonetest-7f15b.firebasestorage.app",
+  messagingSenderId: "294152223979",
+  appId: "1:294152223979:web:e4732a7a567bcd577a92ae"
 };
 
 const app = initializeApp(firebaseConfig);

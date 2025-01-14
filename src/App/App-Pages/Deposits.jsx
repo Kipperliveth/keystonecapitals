@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import DesktopUserNav from '../App-Components/DesktopUserNav'
 import { IoIosArrowDown } from "react-icons/io";
 import { MdNotificationsNone } from "react-icons/md";
-import { NavLink } from 'react-router-dom';
+import { Navigate, NavLink } from 'react-router-dom';
 import logo from "../../stock/logo.png"
 import { CgMenuLeft } from "react-icons/cg";
 import UserNav from '../App-Components/MobileUserNav';
@@ -30,6 +30,8 @@ import {
 import { BsCurrencyDollar } from "react-icons/bs";
 import { getDocs, query, orderBy } from "firebase/firestore";
 import { IoIosArrowForward } from "react-icons/io";
+import { MdOutlinePending } from "react-icons/md";
+import { CiViewList } from "react-icons/ci";
 
 
 
@@ -37,9 +39,21 @@ function Deposits() {
 
     const [user, setUser] = useState({})
     const [showLoader, setShowLoader] = useState(false)
+    const [depositSuccess, setDepositSuccess] = useState(false)
+    const [conversionSuccess, setConversionSuccess] = useState(false)
 
      // State to track if the sidebar is visible
      const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+
+     //conversion states
+
+    const [receiptDetails, setReceiptDetails] = useState({
+      amount: '',
+      cryptoFrom: '',
+      cryptoTo: '',
+      date: new Date().toLocaleDateString(), // Automatically sets the current date
+    });
+
 
      // Function to handle the click event
      const handleNavClick = () => {
@@ -180,42 +194,42 @@ function Deposits() {
       setSuccessMessage(""); // Clear success message
       return;
     }
-
+  
     if (amount > (balances[cryptoFrom] || 0)) {
       setErrorMessage("You cannot transfer more than your available balance.");
       setSuccessMessage(""); // Clear success message
       return;
     }
-
+  
     if (cryptoFrom === cryptoTo) {
       setErrorMessage("You cannot transfer to the same asset.");
       setSuccessMessage(""); // Clear success message
       return;
     }
-
+  
     setErrorMessage("");
-
+  
     const fromNewBalance = (balances[cryptoFrom] || 0) - amount;
     const toNewBalance = (balances[cryptoTo] || 0) + amount;
-
+  
     try {
       setShowLoader(true);
       // Update Firebase balances
       const fromRef = doc(txtdb, `users/${userId}/balances/${cryptoFrom}`);
       const toRef = doc(txtdb, `users/${userId}/balances/${cryptoTo}`);
-
+  
       await updateDoc(fromRef, { balance: fromNewBalance });
       await updateDoc(toRef, { balance: toNewBalance });
-
+  
       // Update local state
       setBalances((prev) => ({
         ...prev,
         [cryptoFrom]: fromNewBalance,
         [cryptoTo]: toNewBalance,
       }));
-
+  
       setAmount(0); // Reset the amount field
-
+  
       // Create a transaction history document
       const transactionData = {
         date: new Date().toISOString(), // ISO format date
@@ -224,19 +238,31 @@ function Deposits() {
         transactionStatus: "Successful",
         category: "Conversion",
       };
-
+  
+      // Set receipt details using `balances` for consistency
+      setReceiptDetails({
+        amount: amount,
+        cryptoFrom: cryptoFrom,
+        cryptoTo: cryptoTo,
+        balanceBefore: balances[cryptoFrom] ? balances[cryptoFrom].toFixed(2) : 'Loading...',
+        date: new Date().toLocaleDateString(), // Capture the current date
+      });
+  
       const transactionsRef = collection(txtdb, `users/${userId}/transactions`);
       await addDoc(transactionsRef, transactionData);
-
+  
       // Display success message
       setSuccessMessage(`Successfully transferred $${amount.toFixed(2)} from ${cryptoFrom} to ${cryptoTo}.`);
       setShowLoader(false);
-
+      setConversionSuccess(true);
+  
     } catch (error) {
       setErrorMessage("Failed to process transfer.");
       setSuccessMessage(""); // Clear success message
+      setShowLoader(false);
     }
   };
+  
 
   //balances\
   
@@ -499,7 +525,18 @@ if (solExchangeRate !== null && solBalance !== null) {
       fetchTransactions();
     }); 
   
+    const [transferredAmount, setTransferredAmount] = useState(0); // New state to store amount
 
+    const handleCopy = (text) => {
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          alert("Address copied to clipboard!");
+        })
+        .catch((err) => {
+          console.error("Failed to copy: ", err);
+        });
+    };
+    
      
   return (
     <div className='layout'>
@@ -683,7 +720,7 @@ if (solExchangeRate !== null && solBalance !== null) {
                   
               </div>
               <p>
-              {usdtBalance !== null ? `${usdtBalance.toFixed(2)} USDT` : "Loading..."}
+              {usdtBalance !== null ? `${usdtBalance.toFixed(2)} USDT` : "Loading..."}c
             </p>
         </div>
           )}
@@ -706,7 +743,7 @@ if (solExchangeRate !== null && solBalance !== null) {
 
               </div>
 
-              <NavLink>Invest Now <MdKeyboardArrowRight /> </NavLink>
+              <NavLink to='/investments'>Invest Now <MdKeyboardArrowRight /> </NavLink>
 
             </div>
 
@@ -729,7 +766,10 @@ if (solExchangeRate !== null && solBalance !== null) {
                 <div className='aza'>
 
                   <p className='address-header'> Ethereum Address</p>
-                  <p className='address'>0x1234567890abcdef <span><FaRegCopy className='copy' /></span></p>
+                  <p className='address' onClick={() => handleCopy('0x1234567890abcdef')}>
+                    0x1234567890abcdef <span><FaRegCopy className='copy' /></span>
+                  </p>
+
 
                   <p>ERC20 <p className='network'>Network</p></p>
 
@@ -792,6 +832,7 @@ if (solExchangeRate !== null && solBalance !== null) {
     const transactionsRef = collection(txtdb, "users", userId, "transactions");
 
     try {
+      setShowLoader(true);
       // Save the deposit in the "deposits" sub-collection
       await addDoc(depositsRef, {
         amount: amountTransferred,
@@ -816,9 +857,13 @@ if (solExchangeRate !== null && solBalance !== null) {
       };
 
       await addDoc(transactionsRef, transactionData);
-
+      
+      
       // Success alert
-      alert(`Deposit confirmed! ${amountTransferred} ${selectedAsset} added to your balance.`);
+      // alert(`Deposit confirmed! ${amountTransferred} ${selectedAsset} added to your balance.`);
+      setTransferredAmount(amountTransferred); 
+      setShowLoader(false);
+      setDepositSuccess(true)
       e.target.reset(); // Reset the form after submission
     } catch (error) {
       console.error("Error processing deposit:", error);
@@ -855,7 +900,7 @@ if (solExchangeRate !== null && solBalance !== null) {
           <div className='nothing-yet'>
             <BiTransfer className="icon" />
           <h4>No transactions yet</h4>  
-          <p>Once you make a payment or convert funds, the information appears here</p>
+          <p>Once you make a payment or convert funds, <br /> the information appears here</p>
             </div>
         ) : (
           <table>
@@ -882,7 +927,7 @@ if (solExchangeRate !== null && solBalance !== null) {
           </table>
         )}
 
-        <div className="all-transactions">
+        <div  className="all-transactions">
           <NavLink to="/transactions">
             View All Transactions <IoIosArrowForward />
           </NavLink>
@@ -941,7 +986,7 @@ if (solExchangeRate !== null && solBalance !== null) {
       </button>
       <br />
       {errorMessage && <p className="error-message">{errorMessage}</p>}
-      {successMessage && <p className="success-message">{successMessage}</p>}
+      {/* {successMessage && <p className="success-message">{successMessage}</p>} */}
 
     </div>
   
@@ -950,9 +995,6 @@ if (solExchangeRate !== null && solBalance !== null) {
 
           </div>
       )}
-
-
-
 
 
         </div>
@@ -983,6 +1025,87 @@ if (solExchangeRate !== null && solBalance !== null) {
 
         </div>
       )}
+
+      {depositSuccess && (
+        <div className="deposit-receipt">
+
+          <div className="receipt">
+
+           <div className='icon-con'>
+              <MdOutlinePending className='icon' />
+           </div>
+
+          <h2 className='amount'>${transferredAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {selectedCoin.name}</h2>
+
+          <h4>Deposit Is Being Vetted</h4>
+
+          <p>This transaction is being processed. Your account will be updated shortly.</p>
+
+            <NavLink to='/transactions'>
+              <CiViewList /> View Transaction
+            </NavLink>
+
+        <button onClick={() => setDepositSuccess(false)} className='close'>Close</button>
+
+          </div>
+        </div>
+      )
+      }
+
+{conversionSuccess && (
+  <div className="conversion-receipt">
+    <div className="reciept-details">
+      <div className='icon-con'>
+        <BiTransfer className='icon' />
+      </div>
+
+      <h2>${receiptDetails.amount}.00</h2>
+      <p>Conversion Successful</p>
+      <span className='line'></span>
+
+      <h6>Conversion Details:</h6>
+      <div className="conversion-details">
+        <ol>
+          <span>Asset Used:</span>
+          <span>{receiptDetails.cryptoFrom}</span>
+        </ol>
+
+        <ol>
+          <span>Balance Before:</span>
+          <span>${receiptDetails.balanceBefore}</span> {/* Replace with a dynamic balance if needed */}
+        </ol>
+
+        <div className='trans'><BiTransfer /></div>
+
+        <ol>
+          <span>Amount Converted:</span>
+          <span>${receiptDetails.amount}.00</span>
+        </ol>
+
+        <ol>
+          <span>Asset:</span>
+          <span>{receiptDetails.cryptoTo}</span>
+        </ol>
+
+        <ol>
+          <span>Date:</span>
+          <span>  {new Date(receiptDetails.date).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}{" "}
+           </span>
+        </ol>
+      </div>
+
+      <button onClick={() => setConversionSuccess(false)} className='close'>
+        Close
+      </button>
+    </div>
+  </div>
+)}
+
+
 
     </div>
   )

@@ -4,27 +4,47 @@
 
         .pages-content{
 
+            .mobile{
+                display: none;
+                margin-bottom: 1.25rem;
+                font-size: 14px;
+            }
+
             .transaction-history{
+                width: 100%;
+                overflow-x: auto; 
+                  white-space: nowrap; 
+
+                  &::-webkit-scrollbar { 
+                    display: none; /* Hide the scrollbar */
+                  }
+
 
                 .nothing-yet{
                     display: flex;
                     flex-direction: column;
-                    gap: 1rem;
+                    gap: .8rem;
                     justify-content: center;
                     text-align: center;
-                    background: white;
+                    align-items: center;
                     padding-block: 5rem;
                     border-radius: 10px;
-                    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 
                     font-size: 14px;
                     margin-block: 2rem;
-                    line-height: 1.5;
-
+                    line-height: 1.8;
+                    flex-wrap: wrap;
+                    // overflow-x: hidden;
+                    padding-inline: 1rem;
                     .icon{
-                      font-size: 25px;
+                      font-size: 30px;
                       display: flex;
                       align-self: center;
+                    }
+
+                    .info{
+                        text-align: center;
+                        color: #888;
                     }
                   }
 
@@ -34,7 +54,7 @@
                     border-radius: 10px;
                     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
                     text-align: center;
-                    padding: 1rem;
+                    padding: 1.5rem;
                 }
 
                 table tr th{
@@ -53,4 +73,35 @@
             }
         }
     }
+}
+
+@media screen and (max-width: 955px) {
+.layout{
+
+    .content{
+
+        .pages-content{
+
+            .mobile{
+                display: block;
+            }
+
+            .transaction-history{
+
+                .nothing-yet{
+                    
+                }
+
+                table{
+                    border-radius: 1px;
+                }
+
+                table tbody tr td{
+                    padding-inline: 1rem;
+
+                }
+            }
+        }
+    }
+}
 }

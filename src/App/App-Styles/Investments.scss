@@ -322,10 +322,16 @@
              .recent-transactions{
                 margin-block: 2rem;
                 border-radius: 20px;
-                border: 2px dashed hsl(0, 0%, 15%);
+                border: 2px dashed hsl(0, 0%, 55%);
 
                 .recent-transactions-container{
                     padding: 1.5rem;
+                    overflow-x: scroll;
+                    white-space: nowrap;
+
+                    &::-webkit-scrollbar { 
+                      display: none; /* Hide the scrollbar */
+                    }
 
                     .nothing-yet{
                       display: flex;
@@ -339,19 +345,24 @@
                       line-height: 1.5;
 
                       .icon{
-                        font-size: 18px;
+                        font-size: 20px;
                         display: flex;
                         align-self: center;
                       }
+
+                      p{
+                        font-size: 12px;
+                      }
+                      
                     }
 
                     table{
                       width: 100%;
                       border-radius: 10px;
-                      // box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
                       text-align: center;
                       padding-inline: 1rem;
                       margin-block: 1rem;
+                  
                   }
   
                   table tr th{
@@ -366,15 +377,17 @@
                       padding-block: 1.5rem;
                       font-size: 14px;
                       color: #333;
-
                     }
 
                     .all-transactions{
                       width: 100%;
                       display: flex;
                       justify-content: flex-end;
+                      position: sticky;
+                      left: 0;
+
                       a{
-                        display: flex;
+                        display: inline-flex;
                         align-items: center;
                         text-decoration: none;
                         font-weight: 500;
@@ -522,7 +535,194 @@
             }
         }
     }
+
+
     }
+}
+
+.layout{
+
+  .deposit-receipt, .conversion-receipt{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100000;
+
+    .receipt{
+      background: white;
+      border-radius: 20px;
+      padding: 1.5rem;
+      width: 350px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1.25rem;
+
+      h4{
+        color: #333;
+        text-align: center;
+      }
+
+      a{
+        text-align: center;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        justify-content: center;
+        color: hsl(0, 0%, 43%);
+        font-size: 13px;
+        gap: .5rem;
+        padding-block: 1rem;
+        background: hsl(0, 0%, 98%);
+        border-radius: 10px;
+        width: 100%;
+      }
+      
+      h2{
+        color: #642B73;
+      }
+
+      .icon-con{
+        background: hsl(288, 46%, 95%);
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        padding: 1rem;
+        border-radius: 50%;
+      }
+
+      p{
+        line-height: 1.5;
+        text-align: center;
+        font-size: 12px;
+        color: #888;
+      }
+
+      .close{
+        width: 100%;
+        padding: 10px 20px;
+        background: #642B73;
+        border-radius: 30px;
+        color: white;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+      }
+    }
+
+    .reciept-details{
+      background: white;
+      border-radius: 20px;
+      padding: 1.5rem;
+      width: 350px;
+      display: flex;
+      flex-direction: column;
+
+      .close{
+        width: 100%;
+        padding: 10px 20px;
+        background: #642B73;
+        border-radius: 30px;
+        color: white;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+      }
+
+      a{
+        margin-block: 1.25rem;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        justify-content: center;
+        color: hsl(0, 0%, 43%);
+        font-size: 13px;
+        gap: .5rem;
+        padding-block: 1rem;
+        background: hsl(0, 0%, 98%);
+        border-radius: 10px;
+        width: 100%;
+      }
+
+      h2{
+        color: #642B73;
+        margin-top: 1.25rem;
+        margin-bottom: .5rem;
+        text-align: center;
+      }
+
+      h4{
+        color: #333;
+      }
+
+      p{
+        text-align: center;
+        color: #333;
+        font-size: 13px;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+      }
+
+      .icon-con{
+        background: hsl(288, 46%, 95%);
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        padding: 1rem;
+        border-radius: 50%;
+      }
+
+      .line{
+        height: 5px;
+        width: 100%;
+        border-top: 2px dashed #888;
+        margin-bottom: 1rem;
+      }
+
+      h6{
+        text-align: left;
+        font-weight: 600;
+        margin-bottom: 1.25rem;
+      }
+
+      
+      ol{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        font-size: 12px;
+        border-bottom: 1px solid #eee;
+        padding-block: 10px;
+
+        &:last-child{
+          border-bottom: 0;
+        }
+      }
+
+      .trans{
+        display: flex;
+        justify-content: center;
+      }
+
+
+    }
+  }
+
 }
 
 @media screen and (max-width: 765px) {
@@ -530,4 +730,28 @@
 .layout .content .pages-content{
     padding-inline: 1rem;
     border: none;
+
+    .deposits{
+
+      .add-convert{
+
+        .add-funds{
+
+          .recent-transactions{
+
+            .recent-transactions-container{
+
+              table{
+                padding: 0;
+              }
+
+                table tbody tr td {
+                  padding-block: 1.75rem;
+                  padding-inline: 1.5rem; 
+              }
+            }
+          }
+        }
+      }
+    }
  }}

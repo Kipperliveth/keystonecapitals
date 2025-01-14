@@ -1,0 +1,154 @@
+.withdrawals{
+    
+    .withdrawals-container{
+     
+        .balance{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            width: 100%;
+            padding: 2rem;
+            gap: .5rem;
+
+            p{
+                font-size: 12px;
+            }
+        }
+
+        .withdrawals-list{
+
+            h4,p{
+                margin-bottom: .25rem;
+                padding-inline: 1rem;
+            }
+            p{
+                font-size: 12px;
+                margin-bottom: 1rem;
+            }
+
+            .assets{
+              display: grid;
+              grid-template-columns: 50% 50%;
+                gap: 1rem;
+                padding-bottom: 2rem;
+                border-bottom: 1px solid #ddd;
+                
+                .asset{
+                    border: 2px solid transparent;
+                    cursor: pointer;
+                    font-size: 75%;
+                    background: #fff;
+                    border: none;
+                    padding: 1rem;
+                    border-radius: 10px;
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+
+                    img{
+                        width: 25px;
+                        height: 25px;
+                    }
+
+                    .bal{
+                        width: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+
+                        span{
+                        display: flex;
+                        justify-content: center; 
+                        align-items: start; 
+                        flex-direction: column;
+                        position: relative;
+                        top: 12.5px;
+                        gap: 5px;
+
+                        p{
+                            padding: 0;
+                        }
+                          
+                        }
+                    }
+                }
+
+                .asset.selected {
+                    border: 2px solid hsl(288, 46%, 81%); /* Blue border for selection */
+                    background-color:hsl(288, 46%, 97%); /* Light background for highlight */
+                    box-shadow: 0 0 10px rgba(100, 43, 115, 0.5); /* Optional shadow for emphasis */
+                  }
+                  
+            }
+        }
+
+        .withdrawals-form{
+            display: grid;
+            grid-template-columns: 50% 50%;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-block: 2rem;
+
+            span{
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                margin-bottom: .5rem;
+
+                label{
+                    font-weight: 600;
+                    font-size: 14px;
+                }
+
+                input, select{
+                    padding: 1rem;
+                    border-radius: 10px;
+                    border: none;
+                    outline: none;
+                    font-size: 14px;
+                    transition: .2s ease;
+
+                    &:hover{
+                        transform: scale(.98);
+                        outline: 1px solid #642B73;
+                    }
+                }
+
+                select{
+                    cursor: pointer;
+                }
+
+                  
+            }
+            
+        }
+
+        .withdraw-btn{
+            box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+            background: #642B73;
+            font-weight: 600;
+            color: white;
+            padding: 1rem 5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition:.2s ease;
+            border: none;
+            outline: none;
+
+            &:hover{
+                background: #4F235D;
+                transform: scale(.98);
+            }
+        }
+
+        .error{
+            color: red;
+            font-weight: 500;
+            margin-block: 1.6rem;
+            font-size: 12px;
+        }
+    }
+}

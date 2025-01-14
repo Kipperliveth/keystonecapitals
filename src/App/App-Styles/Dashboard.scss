@@ -337,6 +337,12 @@
 
                 .recent-transactions-container{
                     padding: 1.5rem;
+                    overflow-x: scroll;
+                    white-space: nowrap;
+
+                    &::-webkit-scrollbar { 
+                      display: none; /* Hide the scrollbar */
+                    }
 
                     .nothing-yet{
                       display: flex;
@@ -350,19 +356,24 @@
                       line-height: 1.5;
 
                       .icon{
-                        font-size: 18px;
+                        font-size: 20px;
                         display: flex;
                         align-self: center;
                       }
+
+                      p{
+                        font-size: 12px;
+                      }
+                      
                     }
 
                     table{
                       width: 100%;
                       border-radius: 10px;
-                      // box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
                       text-align: center;
                       padding-inline: 1rem;
                       margin-block: 1rem;
+                  
                   }
   
                   table tr th{
@@ -377,15 +388,17 @@
                       padding-block: 1.5rem;
                       font-size: 14px;
                       color: #333;
-
                     }
 
                     .all-transactions{
                       width: 100%;
                       display: flex;
                       justify-content: flex-end;
+                      position: sticky;
+                      left: 0;
+
                       a{
-                        display: flex;
+                        display: inline-flex;
                         align-items: center;
                         text-decoration: none;
                         font-weight: 500;
@@ -531,9 +544,20 @@
                 }
             }
 
-            .transaction-history{
-                padding-inline: 1.2rem;
-            }
+            .recent-transactions{
+
+                .recent-transactions-container{
+    
+                  table{
+                    padding: 0;
+                  }
+    
+                    table tbody tr td {
+                      padding-block: 1.75rem;
+                      padding-inline: 1.5rem; 
+                  }
+                }
+              }
     }
 }
 }
