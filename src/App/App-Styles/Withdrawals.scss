@@ -152,3 +152,27 @@
         }
     }
 }
+
+@media screen and (max-width: 879px) {
+.withdrawals{
+
+    .withdrawals-container{
+       .balance{
+        padding: 0;
+        margin-bottom: 2rem;
+       }
+
+       .withdrawals-list{
+        .assets{
+            grid-template-columns: 1fr;
+         }
+       }
+
+       .withdrawals-form{
+        grid-template-columns: 1fr;
+       }
+
+      
+       }
+}
+}

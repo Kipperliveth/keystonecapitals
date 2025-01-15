@@ -1,16 +1,14 @@
 import {
-    signInWithEmailAndPassword,
-    onAuthStateChanged
+    signInWithEmailAndPassword, sendEmailVerification
   } from "firebase/auth";
   import React, { useState, useEffect} from "react";
   import logo from "../../stock/logo.png"
   import { NavLink } from "react-router-dom";
-  import { auth, txtdb } from "../../firebase-config";
+  import { auth } from "../../firebase-config";
   import { useNavigate } from "react-router-dom";
   import { PiHandWavingFill } from "react-icons/pi";
   import { ImSpinner8 } from "react-icons/im";
   import { PuffLoader } from "react-spinners";
-  import { doc, collection, getDoc } from "firebase/firestore";
    
   
   function Login() {
@@ -23,7 +21,7 @@ import {
     const [loginPassword, setLoginPassword] = useState("");
   
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState("");
   
     const allowedUid = "ADQf0ZCM8rRHt99PV4IG8vcYMxr2";
     const login = async (event) => {
@@ -53,12 +51,12 @@ import {
           }
     
         } else {
-          setError("Please verify your email first.");
-          setIsLoggedIn(false);
-          // navigate('/verify-account')
-          navigate("/dashboard");
-
+          // setError("Please verify your email first.")
+          await sendEmailVerification(user)
+          // console.log(user.user, user, "hey")
+          navigate('/verify-account')
           console.log('email not verified')
+          setIsLoggedIn(false)
         }
     
       } catch (error) {

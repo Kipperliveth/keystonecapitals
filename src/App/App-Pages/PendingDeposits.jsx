@@ -1,24 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import DesktopUserNav from '../App-Components/DesktopUserNav'
-import { IoIosArrowDown } from "react-icons/io";
-import { MdNotificationsNone } from "react-icons/md";
 import { NavLink } from 'react-router-dom';
 import logo from "../../stock/logo.png"
-import { CgMenuLeft } from "react-icons/cg";
 import UserNav from '../App-Components/MobileUserNav';
-import { RiExchangeDollarLine } from "react-icons/ri";
 import { BiTransfer } from "react-icons/bi";
-import { RiSendPlaneLine } from "react-icons/ri";
-import { MdFormatListBulletedAdd } from "react-icons/md";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, doc,setDoc, deleteDoc, increment, updateDoc } from "firebase/firestore";
 import { txtdb } from '../../firebase-config';
 import { auth } from '../../firebase-config';
 import {
   onAuthStateChanged
 } from "firebase/auth";
 import { PiHandSwipeLeft } from "react-icons/pi";
+import { IoIosLogOut } from "react-icons/io";
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
 
-function Transactions() {
+function PendingDeposits() {
   const [user, setUser] = useState({});
 
      // State to track if the sidebar is visible
@@ -45,7 +40,6 @@ function Transactions() {
    };
  
    useEffect(() => {
-    document.title= 'Transactions'
      document.addEventListener('mousedown', handleClickOutside);
      return () => {
        document.removeEventListener('mousedown', handleClickOutside);
@@ -63,7 +57,7 @@ function Transactions() {
       if(currentUser){
 
         const userId = currentUser.uid;
-        const transactionsRef = collection(txtdb, "users", userId, "transactions");
+        const transactionsRef = collection(txtdb, "pendingDeposits");
   
         try {
           // Query the transactions, ordered by date (descending)
@@ -99,9 +93,46 @@ function Transactions() {
       return () => unsubscribe();
     }, [auth]);
 
+
+    //
+
+    const authorizeDeposit = async (transaction) => {
+      const assetBalanceRef = doc(txtdb, "users", transaction.userId, "balances", transaction.asset);
+      const transactionRef = doc(txtdb, "users", transaction.userId, "transactions", transaction.transactionId);
+      
+      try {
+        await setDoc(assetBalanceRef, { balance: increment(transaction.amount) }, { merge: true });
+        await updateDoc(transactionRef, { transactionStatus: "Successful" });
+        await deleteDoc(doc(txtdb, "pendingDeposits", transaction.id));
+        alert("Deposit authorized and added to balance.");
+        fetchTransactions();
+      } catch (error) {
+        console.error("Error authorizing deposit:", error);
+      }
+    };
+    
+
+    
+    const declineDeposit = async (transaction) => {
+      const transactionRef = doc(txtdb, "users", transaction.userId, "transactions", transaction.transactionId);
+      
+      try {
+        await updateDoc(transactionRef, { transactionStatus: "Declined" });
+        await deleteDoc(doc(txtdb, "pendingDeposits", transaction.id));
+        alert("Deposit declined.");
+        fetchTransactions();
+      } catch (error) {
+        console.error("Error declining deposit:", error);
+      }
+    };
+    
+    
+    
+    
+
   return (
-    <div className='layout'>
-    <DesktopUserNav />
+    <div className='layout admin'>
+    {/* <DesktopUserNav /> */}
 
     <div className="content">
 
@@ -111,54 +142,33 @@ function Transactions() {
 
     <NavLink to='/dashboard' className="mobile">
               <img src={logo} alt="keystonecapitals" />
-              <p className='name'>Transactions</p>
+              <p className='name'>Pending Deposits</p>
     </NavLink>
 
 
-     <p className='desktop'>Transactions</p>
+     <p className='desktop'>Pending Deposits</p>
 
      <div className="actions desktop" >
 
      <div className="quick" onClick={handleToggleMenu} >
-        Quick Actions 
-        <IoIosArrowDown />
-
-        {menuVisible && (
-                        <div className="quick-actions" ref={menuRef}>
-
-                        <NavLink to="/withdrawals" className="settings top">
-                            <RiSendPlaneLine className='icon' /> Send Money
-                        </NavLink>
-    
-                        <NavLink to="/investments" className="settings">
-                            <MdFormatListBulletedAdd  className='icon' /> New Investment
-                        </NavLink>
-    
-                        <NavLink to="/deposits" state={{ currentPage: "convert" }} className="settings">
-                            <RiExchangeDollarLine  className='icon'/> Convert Funds
-                        </NavLink>
-    
-                        <NavLink to="/deposits" className="logout">
-                            <BiTransfer  className='icon' /> Fund Wallet
-                        </NavLink>
-    
-                        </div>
-                )}
+       Sign Out
+        <IoIosLogOut />
         </div>
 
      <div className="notif">
-     <MdNotificationsNone className='icon' />
+     <MdOutlineAdminPanelSettings className='icon' title='Admin' />
      </div>
      </div>
 
      <div className="actions mobile">
 
      <div className="notif">
-     <MdNotificationsNone className='icon' />
+     <MdOutlineAdminPanelSettings className='icon' title='Admin' />
+
      </div>
 
      <div className="nav"  onClick={handleNavClick}>
-     <CgMenuLeft className='icon' />
+     <IoIosLogOut className='icon' />
      </div>
 
      </div>
@@ -182,23 +192,24 @@ function Transactions() {
     {transactions.length === 0 ? ( // Check if there are no transactions
           <div className='nothing-yet'>
             <BiTransfer className="icon" />
-          <h4>No transactions yet</h4>  
+          <h4>No Pending Deposits yet</h4>  
           <div className='info'>Once you make a payment or convert funds, <br /> the information appears here</div>
             </div>
         ) : (
       <table>
         <thead>
           <tr>
+            <th>User</th>
             <th>Date</th>
             <th>Amount</th>
-            <th>Description</th>
             <th>Status</th>
-            <th>Category</th>
+            <th>Authorize/Decline</th>
           </tr>
         </thead>
         <tbody>
           {transactions.map((transaction) => (
             <tr key={transaction.id}>
+              <td>{transaction.username}</td>
               <td>{new Date(transaction.date).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'short',
@@ -206,10 +217,11 @@ function Transactions() {
           })}</td>
 
               <td>${Number(transaction.amount).toLocaleString()}</td>
-
-              <td>{transaction.description}</td>
               <td>{transaction.transactionStatus}</td>
-              <td>{transaction.category}</td>
+
+              <td className='validate'>
+                <button className='decline'  onClick={() => declineDeposit(transaction.id)}>Decline</button> 
+                <button className='Authorize' onClick={() => authorizeDeposit(transaction)}>Authorize</button></td>
 
             </tr>
           ))}
@@ -229,4 +241,4 @@ function Transactions() {
   )
 }
 
-export default Transactions
+export default PendingDeposits;

@@ -190,7 +190,7 @@
             .progress-container{
               width: 100%;
             display: grid;
-            grid-template-columns: 80% 10%;
+            grid-template-columns: 80% 20%;
             align-items: center;
             }
 
@@ -209,18 +209,27 @@
                 color: #888;
                 margin-block: .5rem;
               }
-
-            .progress-bar {
-              height: 100%;
-              background-color: #4caf50;
-              transition: width 0.3s ease;
-            }
-
-            .progress-percentage {
+              
+              .progress-bar {
+                height: 100%;
+                background-color: #4caf50;
+                transition: width 0.3s ease;
+              }
+              
+              .progress-percentage {
+              display: flex;
+              align-items: center;
               margin-top: 5px;
               font-size: 14px;
-              text-align: right;
+              text-align: center;
               color: #555;
+              justify-content: center;
+              font-weight: 500;
+
+              .completed-icon{
+                margin-right: 6.5px;
+                color: hsl(134, 61%, 31%);
+              }
             }
             }
             

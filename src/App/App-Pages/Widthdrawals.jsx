@@ -24,6 +24,8 @@ import {
 
 function Widthdrawals() {
       const [user, setUser] = useState({})
+
+      
           const [showLoader, setShowLoader] = useState(false)
         const [withdrwalSuccess, setWithdrwalSuccess] = useState(false)
   
@@ -261,6 +263,7 @@ function Widthdrawals() {
    const [solValue, setSolValue] = useState(null); // To store calculated SOL value
    
    useEffect(() => {
+    document.title = "Pending WIthdrwals"
    // Fetch SOL to USD exchange rate
    const fetchExchangeRate = async () => {
      try {
@@ -352,7 +355,7 @@ const handleWithdraw = async () => {
               const withdrwaData = {
                 date: new Date().toISOString(),
                 amount: withdrawAmount,
-                description: `Withdrew ${withdrawAmount} to ${walletAddress}`,
+                description: `Withdrew to ${walletAddress}`,
                 transactionStatus: "Pending",
                 category: "Withdrawal",
                 userId

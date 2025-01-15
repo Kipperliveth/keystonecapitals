@@ -38,6 +38,22 @@ import { CiViewList } from "react-icons/ci";
 function Deposits() {
 
     const [user, setUser] = useState({})
+
+      useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+          if (currentUser) {
+            console.log("User is logged in:", currentUser);
+            setUser(currentUser);
+            
+          } else {
+            console.log("No user is logged in.");
+            setUser(null);
+          }
+        });
+    
+        return () => unsubscribe(); // Cleanup subscription on component unmount
+      }, []);
+
     const [showLoader, setShowLoader] = useState(false)
     const [depositSuccess, setDepositSuccess] = useState(false)
     const [conversionSuccess, setConversionSuccess] = useState(false)
@@ -810,9 +826,9 @@ if (solExchangeRate !== null && solBalance !== null) {
             </div>
 
             <form
-  className="transfer-form"
-  onSubmit={async (e) => {
-    e.preventDefault();
+      className="transfer-form"
+      onSubmit={async (e) => {
+        e.preventDefault();
 
     // Get the input values
     const amountTransferred = parseFloat(e.target.amount.value);
@@ -828,8 +844,15 @@ if (solExchangeRate !== null && solBalance !== null) {
 
     // References
     const depositsRef = collection(txtdb, "users", userId, "deposits");
-    const assetBalanceRef = doc(txtdb, "users", userId, "balances", selectedAsset);
+    // const assetBalanceRef = doc(txtdb, "users", userId, "balances", selectedAsset);
     const transactionsRef = collection(txtdb, "users", userId, "transactions");
+    const transactionData = {
+      date: new Date().toISOString(), // ISO format date
+      amount: amountTransferred,
+      description: `Deposited ${selectedAsset}`,
+      transactionStatus: "Pending",
+      category: "Deposit",
+    };
 
     try {
       setShowLoader(true);
@@ -841,22 +864,34 @@ if (solExchangeRate !== null && solBalance !== null) {
       });
 
       // Update the user's balance for the asset
-      await setDoc(
-        assetBalanceRef,
-        { balance: increment(amountTransferred) }, // Create or update the balance
-        { merge: true } // Merge with existing data
-      );
+      // await setDoc(
+      //   assetBalanceRef,
+      //   { balance: increment(amountTransferred) }, // Create or update the balance
+      //   { merge: true } // Merge with existing data
+      // );
 
       // Add a transaction to the "transactions" collection
-      const transactionData = {
-        date: new Date().toISOString(), // ISO format date
-        amount: amountTransferred,
-        description: `Deposited ${selectedAsset}`,
-        transactionStatus: "Successful",
-        category: "Deposit",
-      };
+      // await addDoc(transactionsRef, transactionData);
+      const transactionRef = await addDoc(transactionsRef, transactionData);
+      const transactionId = transactionRef.id;
 
-      await addDoc(transactionsRef, transactionData);
+
+
+        //Add deposit request
+            
+                    const depositRef = collection(txtdb, `pendingDeposits`);
+                    const depositData = {
+                      date: new Date().toISOString(),
+                      amount: amountTransferred,
+                      transactionStatus: "Pending",
+                      userId,
+                      username: user.displayName,
+                      asset: selectedAsset,
+                      transactionId,
+                    };
+      
+      
+                    await addDoc(depositRef, depositData);
       
       
       // Success alert

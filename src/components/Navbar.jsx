@@ -16,7 +16,7 @@ function Navbar() {
 
   
   const hiddenPaths = [
-    "/login", "/signup", "/verify-account", "/verify-account/username", "/dashboard", '/investments', '/transactions', '/deposits', '/withdrawals'
+    "/login", "/signup", "/verify-account", "/verify-account/username", "/dashboard", '/investments', '/transactions', '/deposits', '/withdrawals', '/pendingDeposits'
   ];
 
   const shouldHideComponent = hiddenPaths.includes(location.pathname);

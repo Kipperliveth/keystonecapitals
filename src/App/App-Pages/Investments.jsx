@@ -21,7 +21,7 @@ import {
 import { CiViewList } from "react-icons/ci";
 import { FaCheck } from "react-icons/fa6";
 import { IoIosWarning } from "react-icons/io";
-
+import { FaCircleCheck } from "react-icons/fa6";
 
 function Investments() {
   const [user, setUser] = useState({});
@@ -34,6 +34,7 @@ const [errorMessage, setErrorMessage] = useState("");
 
 
   useEffect(() => {
+    document.title = 'Investments'
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser || null); // Ensures `user` is set to null if `currentUser` is null
     });
@@ -868,10 +869,10 @@ const [completedInvestments, setCompletedInvestments] = useState([]);
                     <div className="progress">
                       <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
                     </div>
-                      <p className="progress-percentage">{progressPercentage.toFixed(2)}%</p>
-                      <p className="progress-percentage">Completed</p>
+                      {/* <p className="progress-percentage">{progressPercentage.toFixed(2)}%</p> */}
+                      <p className="progress-percentage"> <FaCircleCheck className='completed-icon'/> Completed</p>
 
-                      <p className='re'>Completed and Added to {completedInvestment.selectedAsset} Balance</p>
+                      <div className='re'>Completed and Added to {completedInvestment.selectedAsset} Balance</div>
                       
                       </div>
   

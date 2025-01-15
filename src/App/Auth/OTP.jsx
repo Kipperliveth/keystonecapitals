@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { FaCheckCircle, FaEnvelopeOpenText } from 'react-icons/fa';
 import { auth } from '../../firebase-config'; // Firebase config
 import { useNavigate } from 'react-router-dom';
+import { sendEmailVerification } from 'firebase/auth';
 
 function OTP({ email }) {
   const [checking, setChecking] = useState(false);
   const [status, setStatus] = useState('');
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
   const handleVerificationCheck = async () => {
@@ -21,7 +23,7 @@ function OTP({ email }) {
     await user.reload();
     
     if (user.emailVerified) {
-      navigate('/nextPage');
+      navigate('/verify-account/username');
     } else {
       setStatus('Account not verified');
       setTimeout(() => setStatus(''), 5000);
@@ -30,6 +32,19 @@ function OTP({ email }) {
     setChecking(false);
   };
   
+  const handleResendVerification = async () => {
+    try {
+      const user = auth.currentUser; // Get the currently logged-in user
+      if (user) {
+        await sendEmailVerification(user); // Resend verification email
+        setMessage('Verification email has been resent. Please check your inbox.');
+      } else {
+        setMessage('You must be logged in to resend the verification email.');
+      }
+    } catch (error) {
+      setMessage(`Error: ${error.message}`);
+    }
+  };
 
   return (
     <div style={styles.container}>
@@ -49,8 +64,8 @@ function OTP({ email }) {
 
         {status && <p style={styles.statusMessage}>{status}</p>}
 
-        <p style={styles.resend}>
-          Didn't receive an email? <a href="#resend" style={styles.link}>Resend Verification Link</a>
+        <p style={styles.resend} onClick={handleResendVerification}>
+          Didn't receive an email? <a href="" style={styles.link}>Resend Verification Link</a>
         </p>
       </div>
     </div>

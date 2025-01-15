@@ -3,12 +3,12 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDpxLFNGkHpubNtJUy_hD6CYmXUAntc8Jw",
-  authDomain: "keystonetest-7f15b.firebaseapp.com",
-  projectId: "keystonetest-7f15b",
-  storageBucket: "keystonetest-7f15b.firebasestorage.app",
-  messagingSenderId: "294152223979",
-  appId: "1:294152223979:web:e4732a7a567bcd577a92ae"
+  apiKey: "AIzaSyD2QdJsntqXzwO5L1DU_lz4DwpUBQqGGUI",
+  authDomain: "keystonecapitals.firebaseapp.com",
+  projectId: "keystonecapitals",
+  storageBucket: "keystonecapitals.appspot.com",
+  messagingSenderId: "378718510329",
+  appId: "1:378718510329:web:94bba1ed633be602981628"
 };
 
 const app = initializeApp(firebaseConfig);

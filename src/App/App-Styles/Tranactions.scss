@@ -75,6 +75,39 @@
     }
 }
 
+.layout.admin{
+
+    .content, .container{
+       margin-left: 0;
+       width: 100%;
+
+       .pages-content{
+
+        .transaction-history{
+
+            button{
+                cursor: pointer;
+            padding: 10px 15px;
+            font-weight: 600;
+            color: white;
+            border: none;
+            box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+            border-radius: 10px;
+            }
+
+            .decline{
+                background: #dc3545;
+                margin-right: 1rem;
+            }
+            .Authorize{
+                background: #28a745;
+            }
+        }
+       }
+    }
+
+}
+
 @media screen and (max-width: 955px) {
 .layout{
 

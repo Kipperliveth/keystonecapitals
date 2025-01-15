@@ -70,6 +70,16 @@ function UserNav({ onClose }) {
     return () => unsubscribe(); // Cleanup subscription on component unmount
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      window.location.href = "/login"; // Redirect to login or home page
+    } catch (error) {
+      console.error("Error logging out:", error);
+      alert("Failed to log out. Please try again.");
+    }
+  };
+
   return (
     <div>
         <div className="side-bar">
@@ -159,7 +169,7 @@ function UserNav({ onClose }) {
                     <NavLink className="settings">
                         <MdOutlineSettings /> Settings
                     </NavLink>
-                    <div className="logout">
+                    <div className="logout" onClick={handleLogout}>
                         <MdOutlineLogout /> Logout
                     </div>
                     </div>
