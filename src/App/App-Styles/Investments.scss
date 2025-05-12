@@ -76,6 +76,10 @@
                             gap: 10px;
                             cursor: pointer;
 
+                            word-break: break-all;
+                            white-space: normal;
+                            
+
                             .copy{
                                 color: hsl(0, 0%, 50%);
                                 cursor: pointer;
