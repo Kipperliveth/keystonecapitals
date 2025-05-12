@@ -155,17 +155,35 @@
               margin: 1rem 0;
               border-radius: 8px;
               background-color: #f9f9f9;
-              box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+              box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+
+
+              .Asset-Invested{
+                background: hsl(0, 0%, 93%);
+                padding: 1px 12px;
+                font-weight: 600;
+                font-size: 10px;
+                width: fit-content;
+                border-radius: 5px;
+              }
+
 
               .name-asset{
                 display: flex;
-                gap: 5px;
-                align-items: center;
-                justify-content: space-between;
-                border-bottom: 1px solid hsl(0, 0%, 90%);
-                margin-bottom: 1.6rem;
-                padding-bottom: .7rem;
+                gap: 1rem;
+                align-items: top;
+                padding-bottom: .25rem;
                 padding-top: .35rem;
+                line-height: 2;
+
+                .amount-return{
+                  font-size: 14px;
+                  font-weight: 500;
+                  display: flex;
+                  align-items: center;
+                  color: #888;
+                  gap: 7.5px;
+                }
                 
               }
 
@@ -174,19 +192,29 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: start;
-                padding-inline: 1rem;
+                padding-left: .5rem;
                 margin-bottom: .5rem;
 
-                .amount-return{
-                  font-size: 18px;
-                  font-weight: 500;
-                }
+           
 
                 .duration-details{
                   font-size: 14px;
-                  color: #888;
+                  color: #333;
+                  font-weight: 500;
+                  display: flex;
+                  flex-direction: row;
+                  align-items: center;
+
+                  .span{
+                    color: #888;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                  }
+
                 }
               }
+
             .progress-container{
               width: 100%;
             display: grid;
@@ -196,7 +224,6 @@
 
             .progress {
               position: relative;
-              margin-top: 10px;
               height: 10px;
               background-color: #e0e0e0;
               border-radius: 5px;
@@ -214,6 +241,7 @@
                 height: 100%;
                 background-color: #4caf50;
                 transition: width 0.3s ease;
+                margin-bottom: 1rem;
               }
               
               .progress-percentage {
@@ -234,9 +262,10 @@
             }
             
             .investment-item h4 {
-              color: #642B73;
+              color: #333;
               text-transform: uppercase;
               font-weight: 600;
+              font-size: 20px;
             }
             
             .investment-item p {
@@ -637,6 +666,33 @@
           border-radius: 30px;
         }
 
+      }
+        
+      .active-investments{
+
+       .first, .second{
+
+        .investment-item{
+
+          
+          .amount-duration{
+            
+            .duration-details{
+              flex-direction: column;
+              justify-content: left;
+              align-items: start;
+            }
+            } 
+
+            .progress-container{
+              grid-template-columns: 70% 30%;
+
+              .progress-percentage.complete{
+                font-size: 10px;
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -32,7 +32,7 @@ import { getDocs, query, orderBy } from "firebase/firestore";
 import { IoIosArrowForward } from "react-icons/io";
 import { MdOutlinePending } from "react-icons/md";
 import { CiViewList } from "react-icons/ci";
-
+import { FaEyeSlash } from "react-icons/fa";
 
 
 function Deposits() {
@@ -543,16 +543,37 @@ if (solExchangeRate !== null && solBalance !== null) {
   
     const [transferredAmount, setTransferredAmount] = useState(0); // New state to store amount
 
-    const handleCopy = (text) => {
-      navigator.clipboard.writeText(text)
-        .then(() => {
-          alert("Address copied to clipboard!");
-        })
-        .catch((err) => {
-          console.error("Failed to copy: ", err);
-        });
-    };
-    
+    const [copiedMessage, setCopiedMessage] = useState('');
+
+ const handleCopy = (text, asset) => {
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      setCopiedMessage(`${asset} address copied to clipboard`);
+      setTimeout(() => {
+        setCopiedMessage('');
+      }, 3000); // hides after 3 seconds
+    })
+    .catch((err) => {
+      console.error("Failed to copy: ", err);
+    });
+};
+
+    const [showBalance, setShowBalance] = useState(true);
+
+    const toggleBalance = () => setShowBalance(prev => !prev);
+
+    const [error, setError] = useState("");
+  
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      if (Number(amount) < 500) {
+        setError("The minimum balance is 500 dollars.");
+        return;
+      }
+      setError("");
+      // continue with your submit logic here
+      console.log("Submitted:", amount);
+    }
      
   return (
     <div className='layout'>
@@ -700,60 +721,86 @@ if (solExchangeRate !== null && solBalance !== null) {
 
               <div className="balance">
 
-      {currentBalance === 'BTC' && (
-        <div className='asset-balance'>
-            <div className="total">
-            <BsCurrencyDollar />{bitcoinBalance !== null ? bitcoinBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "Loading..."}
-
+              {currentBalance === 'BTC' && (
+            <div className='asset-balance'>
+              <div className="total">
+                <BsCurrencyDollar />
+                {showBalance
+                  ? (bitcoinBalance !== null
+                    ? bitcoinBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                    : "Loading...")
+                  : "****"}
               </div>
               <p className='asset-value'>
-            {btcValue !== null
-              ? `${btcValue} BTC`
-              : "Fetching wallet..."}
-            </p>
-        </div>
+                {showBalance
+                  ? (btcValue !== null ? `${btcValue} BTC` : "Fetching wallet...")
+                  : "****"}
+              </p>
+            </div>
           )}
 
-             {currentBalance === 'ETH' && (
-        <div className='asset-balance'>
+
+          {currentBalance === 'ETH' && (
+            <div className='asset-balance'>
               <div className="total">
-              <BsCurrencyDollar /> {ethereumBalance !== null ? ethereumBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "Loading..."}
-
-              </div>
-                  <p>
-            {ethValue !== null
-              ? `${ethValue} ETH`
-              : "Fetching wallet..."}
-          </p>
-        </div>
-          )}
-
-      {currentBalance === 'USDT' && (
-        <div className='asset-balance'>
-            <div className="total">
-            <BsCurrencyDollar />{usdtBalance !== null ? usdtBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "Loading..."}
-
-                  
+                <BsCurrencyDollar />
+                {showBalance
+                  ? (ethereumBalance !== null
+                      ? ethereumBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                      : "Loading...")
+                  : "****"}
               </div>
               <p>
-              {usdtBalance !== null ? `${usdtBalance.toFixed(2)} USDT` : "Loading..."}c
-            </p>
-        </div>
+                {showBalance
+                  ? (ethValue !== null ? `${ethValue} ETH` : "Fetching wallet...")
+                  : "****"}
+              </p>
+            </div>
           )}
 
-      {currentBalance === 'SOL' && (
-        <div className='asset-balance'>
-            <div className="total">
-            <BsCurrencyDollar /> {solBalance !== null ? solBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "Loading..."}
-
+          {currentBalance === 'USDT' && (
+            <div className='asset-balance'>
+              <div className="total">
+                <BsCurrencyDollar />
+                {showBalance
+                  ? (usdtBalance !== null
+                      ? usdtBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                      : "Loading...")
+                  : "****"}
               </div>
               <p>
-              {solValue !== null ? `${solValue} SOL` : "Fetching wallet..."}
-            </p>
-        </div>
+                {showBalance
+                  ? (usdtBalance !== null
+                      ? `${usdtBalance.toFixed(2)} USDT`
+                      : "Loading...")
+                  : "****"}
+              </p>
+            </div>
           )}
 
-                <p>Wallet balance <FaEye /></p>
+          {currentBalance === 'SOL' && (
+            <div className='asset-balance'>
+              <div className="total">
+                <BsCurrencyDollar />
+                {showBalance
+                  ? (solBalance !== null
+                      ? solBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                      : "Loading...")
+                  : "****"}
+              </div>
+              <p>
+                {showBalance
+                  ? (solValue !== null ? `${solValue} SOL` : "Fetching wallet...")
+                  : "****"}
+              </p>
+            </div>
+          )}
+
+
+      <p onClick={toggleBalance} style={{ cursor: 'pointer' }}>
+        Wallet balance {showBalance ? <FaEye /> : <FaEyeSlash />}
+      </p>
+
 
               </div>
 
@@ -771,7 +818,9 @@ if (solExchangeRate !== null && solBalance !== null) {
                      <div className='aza'>
 
                      <p className='address-header'> Bitcoin Address</p>
-                     <p className='address'>0x1234567890abcdef <span><FaRegCopy className='copy' /></span></p>
+                     <p className='address' onClick={() => handleCopy('0x1234567890abcdef', "Bitcoin")}>
+                    0x1234567890abcdef <span><FaRegCopy className='copy' /></span>
+                  </p>
    
                      <p>BTC <p className='network'>Network</p></p>
    
@@ -782,7 +831,7 @@ if (solExchangeRate !== null && solBalance !== null) {
                 <div className='aza'>
 
                   <p className='address-header'> Ethereum Address</p>
-                  <p className='address' onClick={() => handleCopy('0x1234567890abcdef')}>
+                  <p className='address' onClick={() => handleCopy('0x1234567890abcdef', 'Ethereum')}>
                     0x1234567890abcdef <span><FaRegCopy className='copy' /></span>
                   </p>
 
@@ -796,7 +845,9 @@ if (solExchangeRate !== null && solBalance !== null) {
                      <div className='aza'>
 
                      <p className='address-header'> USDT Address</p>
-                     <p className='address'>0x1234567890abcdef <span><FaRegCopy className='copy' /></span></p>
+                     <p className='address' onClick={() => handleCopy('0x1234567890abcdef', "USDT")}>
+                    0x1234567890abcdef <span><FaRegCopy className='copy' /></span>
+                  </p>
    
                      <p>ERC20/Tether USDT <p className='network'>Network</p></p>
    
@@ -807,7 +858,9 @@ if (solExchangeRate !== null && solBalance !== null) {
                     <div className='aza'>
 
                     <p className='address-header'> Solana Address</p>
-                    <p className='address'>0x1234567890abcdef <span><FaRegCopy className='copy' /></span></p>
+                    <p className='address' onClick={() => handleCopy('0x1234567890abcdef', "Solana" )}>
+                    0x1234567890abcdef <span><FaRegCopy className='copy' /></span>
+                  </p>
   
                     <p>SOL <p className='network'>Network</p></p>
   
@@ -906,20 +959,23 @@ if (solExchangeRate !== null && solBalance !== null) {
     }
   }}
 >
-  <label htmlFor="amount">Amount</label>
-  <input
-    type="text"
-    id="amount"
-    name="amount"
-    placeholder="Enter amount you transferred"
-    required
-  />
+    <label htmlFor="amount">Amount</label>
+    <input
+      type="number"
+      id="amount"
+      name="amount"
+      placeholder="Enter amount you transferred"
+      min="500"
+      required
+    />
+
 
   <button type="submit" className="submit-btn">
     Confirm Transfer
   </button>
 </form>
 
+{error && <p style={{ color: "red" }}>{error}</p>}
 
           </div>
 
@@ -1087,58 +1143,65 @@ if (solExchangeRate !== null && solBalance !== null) {
       )
       }
 
-{conversionSuccess && (
-  <div className="conversion-receipt">
-    <div className="reciept-details">
-      <div className='icon-con'>
-        <BiTransfer className='icon' />
-      </div>
+      {conversionSuccess && (
+        <div className="conversion-receipt">
+          <div className="reciept-details">
+            <div className='icon-con'>
+              <BiTransfer className='icon' />
+            </div>
 
-      <h2>${receiptDetails.amount}.00</h2>
-      <p>Conversion Successful</p>
-      <span className='line'></span>
+            <h2>${receiptDetails.amount}.00</h2>
+            <p>Conversion Successful</p>
+            <span className='line'></span>
 
-      <h6>Conversion Details:</h6>
-      <div className="conversion-details">
-        <ol>
-          <span>Asset Used:</span>
-          <span>{receiptDetails.cryptoFrom}</span>
-        </ol>
+            <h6>Conversion Details:</h6>
+            <div className="conversion-details">
+              <ol>
+                <span>Asset Used:</span>
+                <span>{receiptDetails.cryptoFrom}</span>
+              </ol>
 
-        <ol>
-          <span>Balance Before:</span>
-          <span>${receiptDetails.balanceBefore}</span> {/* Replace with a dynamic balance if needed */}
-        </ol>
+              <ol>
+                <span>Balance Before:</span>
+                <span>${receiptDetails.balanceBefore}</span> {/* Replace with a dynamic balance if needed */}
+              </ol>
 
-        <div className='trans'><BiTransfer /></div>
+              <div className='trans'><BiTransfer /></div>
 
-        <ol>
-          <span>Amount Converted:</span>
-          <span>${receiptDetails.amount}.00</span>
-        </ol>
+              <ol>
+                <span>Amount Converted:</span>
+                <span>${receiptDetails.amount}.00</span>
+              </ol>
 
-        <ol>
-          <span>Asset:</span>
-          <span>{receiptDetails.cryptoTo}</span>
-        </ol>
+              <ol>
+                <span>Asset:</span>
+                <span>{receiptDetails.cryptoTo}</span>
+              </ol>
 
-        <ol>
-          <span>Date:</span>
-          <span>  {new Date(receiptDetails.date).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}{" "}
-           </span>
-        </ol>
-      </div>
+              <ol>
+                <span>Date:</span>
+                <span>  {new Date(receiptDetails.date).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            })}{" "}
+                </span>
+              </ol>
+            </div>
 
-      <button onClick={() => setConversionSuccess(false)} className='close'>
-        Close
-      </button>
-    </div>
+            <button onClick={() => setConversionSuccess(false)} className='close'>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+{copiedMessage && (
+  <div className="copy-popup">
+    {copiedMessage}
   </div>
 )}
+
 
 
 

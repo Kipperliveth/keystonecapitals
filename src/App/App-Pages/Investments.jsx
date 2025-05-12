@@ -22,6 +22,10 @@ import { CiViewList } from "react-icons/ci";
 import { FaCheck } from "react-icons/fa6";
 import { IoIosWarning } from "react-icons/io";
 import { FaCircleCheck } from "react-icons/fa6";
+import { BsArrowRight } from "react-icons/bs";
+import { LuCalendarClock } from "react-icons/lu";
+
+import bitlogo from "../../stock/bitcoin-btc-logo.png"
 
 function Investments() {
   const [user, setUser] = useState({});
@@ -766,17 +770,43 @@ const [completedInvestments, setCompletedInvestments] = useState([]);
 
               return (
                 <div key={investment.id} className="investment-item">
+
                   <div className="name-asset">
-                    <h4 title="Investment name">{investment.investmentName}</h4>
-                    <p title="Asset Invested">{investment.selectedAsset}</p>
+
+                    <div className="asset-img">
+                      <img src={bitlogo} alt="Asset-image" width={40} height={40}/>
+                    </div>
+                      
+                      <div className="details">
+                    <p title="Asset Invested" class="Asset-Invested" >{investment.selectedAsset}</p>
+                    <h4 title="Investment name"  style={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      maxWidth: '220px', 
+                      position: 'relative'
+                    }}>{investment.investmentName}</h4>
+                    <p className="amount-return">
+                     ${investment.investmentAmount} <BsArrowRight   />  ${investment.estimatedReturn}
+                    </p>
+                      </div>
+
+
                   </div>
 
+                  <div className="progress-container">
+
+                  <div className="progress">
+                    <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
+                  </div>
+                    <p className="progress-percentage">{progressPercentage.toFixed(2)}%</p>
+                    
+                    </div>
+
                   <div className="amount-duration">
-                    <p className="amount-return">
-                      ${investment.investmentAmount} - ${investment.estimatedReturn}
-                    </p>
 
                     <p className="duration-details">
+                     <div className='span'> <LuCalendarClock />Duration: &nbsp; </div> 
                       {investment.selectedDuration} (
                       {new Date(investment.timestamp).toLocaleDateString("en-US", {
                         year: "numeric",
@@ -793,18 +823,8 @@ const [completedInvestments, setCompletedInvestments] = useState([]);
                     </p>
                   </div>
 
-                    <div className="progress-container">
+                 
 
-                  <div className="progress">
-                    <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
-                  </div>
-                    <p className="progress-percentage">{progressPercentage.toFixed(2)}%</p>
-                    
-                    </div>
-
-   
-                    
-                  
                 </div>
               );
             })
@@ -837,44 +857,60 @@ const [completedInvestments, setCompletedInvestments] = useState([]);
   
                 return (
                   <div key={completedInvestment.id} className="investment-item">
-                    <div className="name-asset">
-                      <h4 title="Investment name">{completedInvestment.investmentName}</h4>
-                      <p title="Asset Invested">{completedInvestment.selectedAsset}</p>
-                    </div>
-  
-                    <div className="amount-duration">
-                      <p className="amount-return">
-                        ${completedInvestment.investmentAmount} - ${completedInvestment.estimatedReturn}
-                      </p>
-  
-                      <p className="duration-details">
-                        {completedInvestment.selectedDuration} (
-                        {new Date(completedInvestment.timestamp).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}{" "}
-                        -{" "}
-                        {new Date(completedInvestment.expiryDate).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                        )
-                      </p>
-                    </div>
-  
-                      <div className="progress-container">
-  
-                    <div className="progress">
-                      <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
-                    </div>
-                      {/* <p className="progress-percentage">{progressPercentage.toFixed(2)}%</p> */}
-                      <p className="progress-percentage"> <FaCircleCheck className='completed-icon'/> Completed</p>
 
-                      <div className='re'>Completed and Added to {completedInvestment.selectedAsset} Balance</div>
+                 <div className="name-asset">
+
+                    <div className="asset-img">
+                      <img src={bitlogo} alt="Asset-image" width={40} height={40}/>
+                    </div>
                       
+                      <div className="details">
+                    <p title="Asset Invested" class="Asset-Invested" >{completedInvestment.selectedAsset}</p>
+                    <h4 title="Investment name" style={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      maxWidth: '220px', 
+                      position: 'relative'
+                    }}>{completedInvestment.investmentName}</h4>
+                    <p className="amount-return">
+                     ${completedInvestment.investmentAmount} <BsArrowRight   />  ${completedInvestment.estimatedReturn}
+                    </p>
                       </div>
+
+
+                  </div>
+
+                  <div className="progress-container">
+  
+                <div className="progress">
+                  <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
+                </div>
+                  {/* <p className="progress-percentage">{progressPercentage.toFixed(2)}%</p> */}
+                  <p className="progress-percentage complete"> <FaCircleCheck className='completed-icon'/> Completed</p>
+
+                  
+                  </div>
+                  <div className="amount-duration">
+
+                    <p className="duration-details">
+                     <div className='span'> <LuCalendarClock />Duration: &nbsp; </div> 
+                      {completedInvestment.selectedDuration} (
+                      {new Date(completedInvestment.timestamp).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}{" "}
+                      -{" "}
+                      {new Date(completedInvestment.expiryDate).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                      )
+                    </p>
+                  </div>
+                  <div className='re'>Completed and Added to {completedInvestment.selectedAsset} Balance</div>
   
      
                       

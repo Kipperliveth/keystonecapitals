@@ -17,6 +17,7 @@ import {
   onAuthStateChanged
 } from "firebase/auth";
 import { PiHandSwipeLeft } from "react-icons/pi";
+import BitcoinChart from '../App-Components/BitcoinChart';
 
 function Transactions() {
   const [user, setUser] = useState({});
@@ -98,6 +99,8 @@ function Transactions() {
       // Cleanup function to unsubscribe from the listener when component unmounts
       return () => unsubscribe();
     }, [auth]);
+
+
 
   return (
     <div className='layout'>
@@ -183,6 +186,7 @@ function Transactions() {
           <div className='nothing-yet'>
             <BiTransfer className="icon" />
           <h4>No transactions yet</h4>  
+          <BitcoinChart />
           <div className='info'>Once you make a payment or convert funds, <br /> the information appears here</div>
             </div>
         ) : (

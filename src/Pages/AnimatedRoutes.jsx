@@ -17,6 +17,7 @@ import Widthdrawals from "../App/App-Pages/Widthdrawals";
 import Transactions from "../App/App-Pages/Transactions";
 import Investments from "../App/App-Pages/Investments";
 import PendingDeposits from "../App/App-Pages/PendingDeposits";
+import Reset from "../App/Auth/Reset";
 
 function AnimatedRoutes() {
 
@@ -49,6 +50,7 @@ function AnimatedRoutes() {
        <Route path="/withdrawals" element={<Widthdrawals /> } />
       <Route path="/transactions" element={<Transactions /> } />
        <Route path="/investments" element={<Investments /> } />
+       <Route path="/reset" element={<Reset />}/>
 
       <Route path="/pendingDeposits" element={<PendingDeposits />} />
 

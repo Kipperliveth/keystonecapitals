@@ -114,17 +114,27 @@ function PendingDeposits() {
 
     
     const declineDeposit = async (transaction) => {
+      console.log("Transaction received:", transaction);
+      if (!transaction?.userId || !transaction?.transactionId || !transaction?.id) {
+        console.error("Missing transaction data:", transaction);
+        alert("Cannot decline deposit: incomplete transaction data.");
+        return;
+      }
+    
       const transactionRef = doc(txtdb, "users", transaction.userId, "transactions", transaction.transactionId);
-      
+      const pendingDepositRef = doc(txtdb, "pendingDeposits", transaction.id);
+    
       try {
         await updateDoc(transactionRef, { transactionStatus: "Declined" });
-        await deleteDoc(doc(txtdb, "pendingDeposits", transaction.id));
+        await deleteDoc(pendingDepositRef);
         alert("Deposit declined.");
         fetchTransactions();
       } catch (error) {
         console.error("Error declining deposit:", error);
       }
     };
+    
+    
     
     
     
@@ -193,8 +203,8 @@ function PendingDeposits() {
           <div className='nothing-yet'>
             <BiTransfer className="icon" />
           <h4>No Pending Deposits yet</h4>  
-          <div className='info'>Once you make a payment or convert funds, <br /> the information appears here</div>
-            </div>
+          <div className='info'>Pending transactions  will show up here.</div>
+            </div>  
         ) : (
       <table>
         <thead>
@@ -220,7 +230,7 @@ function PendingDeposits() {
               <td>{transaction.transactionStatus}</td>
 
               <td className='validate'>
-                <button className='decline'  onClick={() => declineDeposit(transaction.id)}>Decline</button> 
+                <button className='decline'  onClick={() => declineDeposit(transaction)}>Decline</button> 
                 <button className='Authorize' onClick={() => authorizeDeposit(transaction)}>Authorize</button></td>
 
             </tr>

@@ -150,7 +150,7 @@ import {
                   <input
                     className="email-input"
                     type="email"
-                    placeholder="mail@placeholder.com"
+                    placeholder="Enter your email"
                     onChange={(event) => {
                       setLoginEmail(event.target.value);
                     }}

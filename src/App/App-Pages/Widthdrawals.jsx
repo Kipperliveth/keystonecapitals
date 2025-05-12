@@ -547,11 +547,11 @@ const handleWithdraw = async () => {
 
 
         <span>
-        <label htmlFor="cryptoType">Withdrawal wallet type</label>
+        <label htmlFor="cryptoType">Withdrawal Wallet</label>
         <select required id="cryptoType"  onChange={(e) => setCryptoType(e.target.value)}
           value={cryptoType}>
           <option value="" disabled selected>
-            Select wallet Type
+            Select wallet
           </option>
           <option value="BTC">Bitcoin (BTC)</option>
           <option value="ETH">Ethereum (ETH)</option>
@@ -562,7 +562,7 @@ const handleWithdraw = async () => {
 
       <span>
       <label htmlFor="walletAddress">Wallet Address</label>
-      <input type="input" id="walletAddress" placeholder='Wallet Address' onChange={handleWalletAddressChange} value={walletAddress} required/>
+      <input type="input" id="walletAddress" placeholder='Receiver Wallet Address' onChange={handleWalletAddressChange} value={walletAddress} required/>
       </span>
 
         </div>

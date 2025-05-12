@@ -20,14 +20,16 @@ import { IoWalletOutline } from "react-icons/io5";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { BsCurrencyDollar } from "react-icons/bs";
 import { auth, txtdb } from '../../firebase-config';
-import { doc, collection, getDoc } from "firebase/firestore";
+import { doc, collection, getDoc, updateDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { getDocs, query, orderBy } from "firebase/firestore";
 
 import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { IoIosArrowForward } from "react-icons/io";
-
+import { LuCalendarClock } from "react-icons/lu";
+import { BsArrowRight } from "react-icons/bs";
+import { LuDot } from "react-icons/lu";
 
 function Dashboard() {
 
@@ -327,6 +329,133 @@ function Dashboard() {
       useEffect(() => {
         fetchTransactions();
       }); 
+
+
+      //list of investments
+      
+      const [investments, setInvestments] = useState([]);
+      
+        // const currentUser = auth.currentUser;
+      
+        const fetchInvestments = async () => {
+      
+          if(currentUser){
+            const userId = currentUser.uid; // Ensure user is logged in
+            const investmentsRef = collection(txtdb, "users", userId, "investments");
+      
+            try {
+        
+              const q = query(investmentsRef, orderBy("timestamp", "desc"));
+              const querySnapshot = await getDocs(q);
+        
+              const fetchedInvestments = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+              }));
+        
+              setInvestments(fetchedInvestments);
+            } catch (error) {
+              console.error("Error fetching investments:", error);
+            }
+      
+          }
+      
+        };
+        
+        useEffect(() => {
+        fetchInvestments();
+      },); // Empty dependency array to run once when the component mounts
+      
+      useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+          setUser(currentUser || null); // Ensures `user` is set to null if `currentUser` is null
+        });
+      
+        // Cleanup function to unsubscribe from the listener when component unmounts
+        return () => unsubscribe();
+      }, [auth]);
+      
+      
+      
+      const deleteExpiredInvestments = async () => {
+        const currentUser = auth.currentUser;
+      
+        if (currentUser) {
+          const userId = currentUser.uid;
+      
+          try {
+            const investmentsRef = collection(txtdb, `users/${userId}/investments`);
+            const deletionLogsRef = collection(txtdb, `users/${userId}/deletionLogs`);
+      
+            // Fetch all investments
+            const snapshot = await getDocs(investmentsRef);
+            const currentDate = new Date();
+      
+            for (const docSnapshot of snapshot.docs) {
+              const investment = docSnapshot.data();
+              const investmentId = docSnapshot.id;
+      
+              // Check if the investment's expiry date is in the past and if it is already processed
+              if (new Date(investment.expiryDate) < currentDate && !investment.isProcessed) {
+                const deletionTime = new Date().toISOString();
+      
+                // Update the asset balance
+                const assetRef = doc(txtdb, `users/${userId}/balances/${investment.selectedAsset}`);
+                const assetSnap = await getDoc(assetRef);
+      
+                if (assetSnap.exists()) {
+                  const currentBalance = assetSnap.data().balance || 0;
+                  const updatedBalance = currentBalance + parseFloat(investment.estimatedReturn);
+      
+                  // Update the balance in Firestore
+                  await updateDoc(assetRef, { balance: updatedBalance });
+                  console.log(`Updated balance for ${investment.selectedAsset}: ${updatedBalance}`);
+                } else {
+                  console.warn(`Asset ${investment.selectedAsset} does not exist. Skipping balance update.`);
+                }
+      
+                // Log the deletion using setDoc with the investment ID to avoid duplicates
+                await setDoc(doc(deletionLogsRef, investmentId), {
+                  investmentId,
+                  deletedAt: deletionTime,
+                  ...investment, // Include deleted investment details if needed
+                });
+                console.log(`Logged deletion for ${investment.selectedAsset}`);
+      
+                // Add transaction history using setDoc
+                const transactionsRef = collection(txtdb, `users/${userId}/transactions`);
+                const transactionData = {
+                  date: new Date().toISOString(),
+                  amount: investment.estimatedReturn,
+                  description: `Cashed out ${investment.estimatedReturn} from ${investment.investmentName}`,
+                  transactionStatus: "Successful",
+                  category: "Cashback",
+                };
+                await setDoc(doc(transactionsRef, investmentId), transactionData);
+                console.log('Transaction history added successfully');
+      
+                // Delete the investment
+                await deleteDoc(docSnapshot.ref);
+                console.log(`Investment deleted successfully.`);
+      
+                // Mark the investment as processed
+                await updateDoc(docSnapshot.ref, { isProcessed: true });
+              }
+            }
+      
+            console.log("Expired investments deleted successfully, logged, and balances updated.");
+          } catch (error) {
+            console.error("Error deleting expired investments:", error);
+          }
+        }
+      };
+      
+      useEffect(() => {
+        // Check for expired investments when the page loads
+        deleteExpiredInvestments();
+        return
+      }, []); // Empty dependency array to run only on initial load
+      
     
 
 
@@ -418,11 +547,11 @@ function Dashboard() {
               <BsCurrencyDollar />{usdtBalance !== null || bitcoinBalance !== null || ethereumBalance !== null || solBalance !== null ? (
           <>
            {[
-  usdtBalance || 0, 
-  bitcoinBalance || 0, 
-  ethereumBalance || 0, 
-  solBalance || 0,
-].reduce((acc, balance) => acc + balance, 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            usdtBalance || 0, 
+            bitcoinBalance || 0, 
+            ethereumBalance || 0, 
+            solBalance || 0,
+          ].reduce((acc, balance) => acc + balance, 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 
           </>
         ) : (
@@ -564,12 +693,72 @@ function Dashboard() {
             <div className="newInvest-methods-container">
 
               <div className="active">
-                <h5>Active Investments</h5>
-                <div className="active-investments">
-                  <p className='nothing'>
-                  Your Active Investments will show here
-                  </p>
-                </div>
+                <h5 style={{ marginBottom: '0' }}>Active Investments</h5>
+
+
+                <div className='active-container'>
+            
+                {investments.length === 0 ? (
+  <p className="nothing">Your Active Investments will show here.</p>
+                ) : (
+                  investments
+                    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)) // sort by latest first
+                    .slice(0, 2) // take only the first 2
+                    .map((investment, index) => {
+                      const startDate = new Date(investment.timestamp); 
+                      const expiryDate = new Date(investment.expiryDate);
+                      const currentDate = new Date();
+
+                      const totalDuration = expiryDate - startDate;
+                      const timeElapsed = currentDate - startDate;
+                      const progressPercentage = Math.min((timeElapsed / totalDuration) * 100, 100);
+
+                      return (
+                        <div key={investment.id} className="investment-item">
+
+                          <div className="name-asset">
+                            <div className="asset-img">
+                              <img src={bitcoin} alt="Asset-image" width={30} height={30}/>
+                            </div>
+
+                            <div className="details">
+                              <h4 title="Investment name" style={{
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                maxWidth: '220px'
+                              }}>
+                                {investment.investmentName}
+                              </h4>
+
+                              <span>
+                                <p title="Asset Invested" className="Asset-Invested">{investment.selectedAsset}</p><LuDot />
+                                <p className="amount-return">
+                                  ${investment.investmentAmount} <BsArrowRight /> ${investment.estimatedReturn}
+                                </p><LuDot />
+                                <p>{investment.selectedDuration}</p>
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="progress-container">
+                            <p className="progress-percentage">{progressPercentage.toFixed(2)}%</p>
+                          </div>
+                        </div>
+                      );
+                    })
+                )}
+
+  
+          </div>
+
+          <div className="all-transactions">
+          <NavLink to="/investments">
+           Investment History <IoIosArrowForward />
+          </NavLink>
+        </div>
+
+
               </div>
 
               <div className="methods">
@@ -655,7 +844,7 @@ function Dashboard() {
            <div className="roi-rate rate">
 
           <div className="asset"><img src={bitcoin} alt='bitcoin' /> BTC</div>
-          <div className="capital">$50</div>
+          <div className="capital">$500</div>
           <div className="ROI">+40%(2wks) / + 200%(2mnths)</div>
 
           </div>
@@ -663,7 +852,7 @@ function Dashboard() {
           <div className="roi-rate rate">
 
           <div className="asset"><img src={Eth} alt='eth'/>ETH</div>
-          <div className="capital">$50</div>
+          <div className="capital">$500</div>
           <div className="ROI">+40%(2wks) / + 200%(2mnths)</div>
 
           </div>
@@ -671,7 +860,7 @@ function Dashboard() {
           <div className="roi-rate rate">
 
           <div className="asset"><img src={USDT} alt='USDT'/> USDT</div>
-          <div className="capital">$50</div>
+          <div className="capital">$500</div>
           <div className="ROI">+40%(2wks) / + 200%(2mnths)</div>
 
           </div>
@@ -679,7 +868,7 @@ function Dashboard() {
           <div className="roi-rate rate last">
 
           <div className="asset"><img src={sol} alt='solana' />SOL</div>
-          <div className="capital">$50</div>
+          <div className="capital">$500</div>
           <div className="ROI">+40%(2wks) / + 200%(2mnths)</div>
 
           </div>
