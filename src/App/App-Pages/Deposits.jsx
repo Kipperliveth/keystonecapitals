@@ -818,8 +818,8 @@ if (solExchangeRate !== null && solBalance !== null) {
                      <div className='aza'>
 
                      <p className='address-header'> Bitcoin Address</p>
-                     <p className='address' onClick={() => handleCopy('bc1q0myllq6dpnnmgweauuv0dr3wts5hvzyp9n0tep', "Bitcoin")}>
-                     bc1q0myllq6dpnnmgweauuv0dr3wts5hvzyp9n0tep <span><FaRegCopy className='copy' /></span>
+                     <p className='address' onClick={() => handleCopy('bc1qzyyushrkdl76h2wsg5csppuk3kxl02dfa336em', "Bitcoin")}>
+                     bc1qzyyushrkdl76h2wsg5csppuk3kxl02dfa336em <span><FaRegCopy className='copy' /></span>
                   </p>
    
                      <p>BTC <p className='network'>Network</p></p>
@@ -832,7 +832,7 @@ if (solExchangeRate !== null && solBalance !== null) {
 
                   <p className='address-header'> Ethereum Address</p>
                   <p className='address' onClick={() => handleCopy('0x654E638F8309Fa96E635E9BE315126D102132553', 'Ethereum')}>
-                  0x654E638F8309Fa96E635E9BE315126D102132553 <span><FaRegCopy className='copy' /></span>
+                  0xE756c2e16D6a2a802eB36Db60a0E9D5F5CbC5c8b <span><FaRegCopy className='copy' /></span>
                   </p>
 
 
@@ -845,8 +845,8 @@ if (solExchangeRate !== null && solBalance !== null) {
                      <div className='aza'>
 
                      <p className='address-header'> USDT Address</p>
-                     <p className='address' onClick={() => handleCopy('0x654E638F8309Fa96E635E9BE315126D102132553', "USDT")}>
-                     0x654E638F8309Fa96E635E9BE315126D102132553 <span><FaRegCopy className='copy' /></span>
+                     <p className='address' onClick={() => handleCopy('0xE756c2e16D6a2a802eB36Db60a0E9D5F5CbC5c8b', "USDT")}>
+                     0xE756c2e16D6a2a802eB36Db60a0E9D5F5CbC5c8b <span><FaRegCopy className='copy' /></span>
                   </p>
    
                      <p>ERC20/Tether USDT <p className='network'>Network</p></p>
@@ -858,8 +858,8 @@ if (solExchangeRate !== null && solBalance !== null) {
                     <div className='aza'>
 
                     <p className='address-header'> Solana Address</p>
-                    <p className='address' onClick={() => handleCopy('FmbZjYmzkLoQFtRo62ePdwBUrVVQjbnADTLxzxtSU9nz', "Solana" )}>
-                    FmbZjYmzkLoQFtRo62ePdwBUrVVQjbnADTLxzxtSU9nz <span><FaRegCopy className='copy' /></span>
+                    <p className='address' onClick={() => handleCopy('EdzTjThyXaPPG92KCBkarPnCdz2f1QaaVAUqwZAwZ75q', "Solana" )}>
+                    EdzTjThyXaPPG92KCBkarPnCdz2f1QaaVAUqwZAwZ75q <span><FaRegCopy className='copy' /></span>
                   </p>
   
                     <p>SOL <p className='network'>Network</p></p>

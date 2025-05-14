@@ -186,7 +186,6 @@ function Transactions() {
           <div className='nothing-yet'>
             <BiTransfer className="icon" />
           <h4>No transactions yet</h4>  
-          <BitcoinChart />
           <div className='info'>Once you make a payment or convert funds, <br /> the information appears here</div>
             </div>
         ) : (

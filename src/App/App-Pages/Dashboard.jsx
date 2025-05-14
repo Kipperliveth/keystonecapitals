@@ -22,6 +22,8 @@ import { BsCurrencyDollar } from "react-icons/bs";
 import { auth, txtdb } from '../../firebase-config';
 import { doc, collection, getDoc, updateDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { getDocs, query, orderBy } from "firebase/firestore";
+import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
 
 import {
   onAuthStateChanged,
@@ -30,6 +32,8 @@ import { IoIosArrowForward } from "react-icons/io";
 import { LuCalendarClock } from "react-icons/lu";
 import { BsArrowRight } from "react-icons/bs";
 import { LuDot } from "react-icons/lu";
+import { PiHandSwipeLeft } from "react-icons/pi";
+
 
 function Dashboard() {
 
@@ -457,7 +461,21 @@ function Dashboard() {
       }, []); // Empty dependency array to run only on initial load
       
     
+      const scrollRef = useRef(null);
 
+      const scrollLeft = () => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollBy({ left: -400, behavior: 'smooth' });
+        }
+      };
+    
+      const scrollRight = () => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollBy({ left: 400, behavior: 'smooth' });
+        }
+      };
+    
+    
 
   return (
     <div className='layout'>
@@ -533,7 +551,7 @@ function Dashboard() {
 
       <div className="accounts">
 
-          <div className="accounts-container">
+          <div className="accounts-container" ref={scrollRef}>   
 
             <div className="account">
 
@@ -647,6 +665,12 @@ function Dashboard() {
             </NavLink>
 
           </div>
+
+          <div className="swipe">
+        <button onClick={scrollLeft}><FaArrowLeft /></button>
+        <button onClick={scrollRight}><FaArrowRight /></button>
+      </div>
+
 
       </div>
 

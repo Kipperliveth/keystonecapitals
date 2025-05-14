@@ -90,6 +90,29 @@
                     }
                 }
             }
+
+            .swipe{
+                display: flex;
+                align-items: center;
+                justify-content: right;
+                gap: 1rem;
+                margin-top: 1rem;
+
+                button{
+                    border: none;
+                    background: hsl(0, 0%, 95%);
+                    border-radius: 50%;
+                    height: 35px;
+                    width: 35px;
+                    display:flex;
+                    justify-content: center;
+                    align-items: center;
+                    cursor: pointer;
+                    color: hsl(0, 0%, 50%);
+                      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+
+                }
+            }
         }
 
         .act{
